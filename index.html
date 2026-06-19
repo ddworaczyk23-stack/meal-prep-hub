@@ -118,6 +118,24 @@
     .mb-6 { margin-bottom: 6px; }
 
     .footer { padding: 10px 14px 20px; font-size: 10px; color: #374151; text-align: center; }
+
+    /* Servings slider */
+    .servings-row { display: flex; align-items: center; gap: 10px; }
+    .servings-slider { width: 140px; accent-color: #FF6B35; }
+    .servings-val { font-size: 13px; font-weight: 700; color: #FF6B35; min-width: 70px; }
+
+    /* Morning editor */
+    .link-btn { background: none; border: none; color: #6B7280; font-size: 10px; text-decoration: underline; cursor: pointer; padding: 0; }
+    .morning-edit-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; margin-top: 8px; }
+    .morning-field { display: flex; flex-direction: column; gap: 2px; }
+    .morning-field label { font-size: 9px; color: #6B7280; text-transform: uppercase; }
+    .morning-field input { background: #1F2937; border: 1px solid #374151; border-radius: 6px; color: #F9FAFB; font-size: 12px; padding: 4px 6px; width: 100%; outline: none; font-family: inherit; }
+
+    /* Batch / shopping list */
+    .batch-banner { margin: 10px 14px 0; padding: 8px 12px; border-radius: 8px; background: #10B98115; border: 1px solid #10B98130; display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+    .shopping-list { background: #0D1117; border: 1px solid #1F2937; border-radius: 8px; padding: 10px 12px; }
+    .shopping-item { font-size: 12px; color: #D1D5DB; padding: 4px 0; border-bottom: 1px solid #1F2937; display: flex; gap: 7px; align-items: center; }
+    .batch-toggle-btn { padding: 6px 12px; border-radius: 7px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid #1F2937; }
   </style>
 </head>
 <body>
@@ -127,7 +145,9 @@
 //  DATA
 // ═══════════════════════════════════════════════════
 
-const MORNING = { cal: 803, protein: 74, carbs: 85, fat: 22, fiber: 5 };
+const DEFAULT_MORNING = { cal: 803, protein: 74, carbs: 85, fat: 22, fiber: 5 };
+const BASE_SERVINGS = 8;       // recipes are written for 8 servings (4.5 lb batch)
+const RAW_OZ_PER_SERVING = 9;  // raw chicken per serving
 
 const RICE = [
   { value: 1,   label: "185g (1 cup)",    cal: 200, protein: 4,  carbs: 44,  fat: 0, fiber: 1 },
@@ -159,10 +179,10 @@ const RECIPES = [
     method: ["Combine soy sauce, garlic, ginger, rice vinegar, honey, and broth.","Pour over chicken thighs in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred or slice chicken, toss in cooking juices.","Add sesame oil AFTER shredding — not during cooking, it turns bitter.","Portion over rice and veggies. Cool to room temp, then freeze."],
     tip: "Track raw chicken weight before loading the cooker. Cooked weight shrinks ~25%. Sesame oil added during cooking turns bitter — always add after.",
     levers: [
-      { label: "1 tbsp peanut butter in sauce",    batch: "½ cup (8 tbsp) peanut butter — add to sauce before cooking", cal: 95,  protein: 4, carbs: 3, fat: 8,  fiber: 0.5 },
-      { label: "1 tbsp crushed peanuts at serving", batch: "½ cup crushed peanuts — portion 1 tbsp per container",       cal: 50,  protein: 2, carbs: 2, fat: 4,  fiber: 0.5 },
-      { label: "Extra 1 tsp sesame oil drizzle",    batch: "8 tsp sesame oil — portion per container at packing",        cal: 40,  protein: 0, carbs: 0, fat: 5,  fiber: 0   },
-      { label: "1/2 cup edamame mixed in",           batch: "4 cups (32 oz) edamame — stir into batch after shredding",  cal: 95,  protein: 8, carbs: 7, fat: 4,  fiber: 4   },
+      { label: "1 tbsp peanut butter in sauce",    qty: 1,   unit: "tbsp", item: "peanut butter",    note: "add to sauce before cooking",          cal: 95,  protein: 4, carbs: 3, fat: 8,  fiber: 0.5 },
+      { label: "1 tbsp crushed peanuts at serving", qty: 1,   unit: "tbsp", item: "crushed peanuts",  note: "portion per container at packing",      cal: 50,  protein: 2, carbs: 2, fat: 4,  fiber: 0.5 },
+      { label: "Extra 1 tsp sesame oil drizzle",    qty: 1,   unit: "tsp",  item: "sesame oil",       note: "portion per container at packing",      cal: 40,  protein: 0, carbs: 0, fat: 5,  fiber: 0   },
+      { label: "1/2 cup edamame mixed in",           qty: 0.5, unit: "cup",  item: "edamame",          note: "stir into batch after shredding",       cal: 95,  protein: 8, carbs: 7, fat: 4,  fiber: 4   },
     ],
   },
   {
@@ -172,10 +192,10 @@ const RECIPES = [
     method: ["Mix BBQ sauce, paprika, garlic powder, onion powder, pepper, and vinegar.","Pour sauce over chicken in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Pull apart chicken with two forks. Toss in thickened cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "BBQ sauce is your main calorie trap — 2 tbsp can hit 80–90 cal and most people pour more. Measure it. Choose a brand under 12g sugar per 2 tbsp. Apple cider vinegar keeps the pull moist without adding calories.",
     levers: [
-      { label: "Extra 1 tbsp BBQ sauce at serving", batch: "½ cup (8 tbsp) BBQ sauce — portion per container",          cal: 30,  protein: 0, carbs: 7, fat: 0,  fiber: 0 },
-      { label: "1 oz shredded cheddar on top",       batch: "8 oz (1 bag) shredded cheddar — portion per container",   cal: 110, protein: 7, carbs: 0, fat: 9,  fiber: 0 },
-      { label: "1 tbsp full-fat sour cream",          batch: "½ cup (8 tbsp) sour cream — portion per container",       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
-      { label: "1/2 avocado at serving",              batch: "4 avocados — slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
+      { label: "Extra 1 tbsp BBQ sauce at serving", qty: 1,   unit: "tbsp",    item: "BBQ sauce",        note: "portion per container",                       cal: 30,  protein: 0, carbs: 7, fat: 0,  fiber: 0 },
+      { label: "1 oz shredded cheddar on top",       qty: 1,   unit: "oz",      item: "shredded cheddar", note: "portion per container",                       cal: 110, protein: 7, carbs: 0, fat: 9,  fiber: 0 },
+      { label: "1 tbsp full-fat sour cream",          qty: 1,   unit: "tbsp",    item: "sour cream",       note: "portion per container",                       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
+      { label: "1/2 avocado at serving",              qty: 0.5, unit: "avocado", item: "avocado",          note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
     ],
   },
   {
@@ -185,10 +205,10 @@ const RECIPES = [
     method: ["Rub dry seasonings over all chicken thighs.","Place in slow cooker. Pour salsa and lime juice over top.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred chicken and toss in cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "Leanest base in the rotation — use on rest days when calories run lower. Add jalapeños or hot sauce for heat at zero calorie cost. Tomato-salsa base freezes exceptionally well.",
     levers: [
-      { label: "1/2 avocado at serving",         batch: "4 avocados — slice fresh at each meal, don't pre-portion",  cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
-      { label: "2 tbsp full-fat sour cream",      batch: "1 cup (16 tbsp) sour cream — portion per container",       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
-      { label: "1 oz Mexican cheese blend",        batch: "8 oz (1 bag) Mexican cheese — portion per container",      cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
-      { label: "Flour tortilla wrap (swap rice)",  batch: "8 flour tortillas — store separately, wrap at each meal",  cal: 200, protein: 6, carbs: 36, fat: 3,  fiber: 1 },
+      { label: "1/2 avocado at serving",         qty: 0.5, unit: "avocado",  item: "avocado",              note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
+      { label: "2 tbsp full-fat sour cream",      qty: 2,   unit: "tbsp",     item: "sour cream",           note: "portion per container",                       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
+      { label: "1 oz Mexican cheese blend",        qty: 1,   unit: "oz",       item: "Mexican cheese blend", note: "portion per container",                       cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
+      { label: "Flour tortilla wrap (swap rice)",  qty: 1,   unit: "tortilla", item: "flour tortilla",       note: "store separately, wrap at each meal",         cal: 200, protein: 6, carbs: 36, fat: 3,  fiber: 1 },
     ],
   },
   {
@@ -198,10 +218,10 @@ const RECIPES = [
     method: ["Add crushed tomatoes, garlic, olive oil, sugar, and seasonings to slow cooker.","Nestle chicken thighs into the sauce.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred or slice chicken, stir back into sauce.","Optional: blend smooth with immersion blender.","Portion over rice and veggies. Cool then freeze."],
     tip: "Tomato-based sauces are the most freezer-stable — this reheats the best of all six. Red pepper flakes lose heat in the slow cooker, so add more at serving if needed.",
     levers: [
-      { label: "1 tbsp olive oil drizzle at serving", batch: "½ cup (8 tbsp) olive oil — portion per container",          cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
-      { label: "1 oz burrata or ricotta on top",       batch: "8 oz burrata or ricotta — portion per container",          cal: 90,  protein: 6, carbs: 1,  fat: 7,  fiber: 0 },
-      { label: "1/4 cup white beans mixed in",          batch: "2 cups (1 can) white beans — stir into batch after cooking", cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
-      { label: "1 oz shredded parmesan on top",         batch: "8 oz parmesan — portion per container",                    cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
+      { label: "1 tbsp olive oil drizzle at serving", qty: 1,    unit: "tbsp", item: "olive oil",          note: "portion per container",          cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1 oz burrata or ricotta on top",       qty: 1,    unit: "oz",   item: "burrata or ricotta", note: "portion per container",          cal: 90,  protein: 6, carbs: 1,  fat: 7,  fiber: 0 },
+      { label: "1/4 cup white beans mixed in",          qty: 0.25, unit: "cup",  item: "white beans",       note: "stir into batch after cooking", cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
+      { label: "1 oz shredded parmesan on top",         qty: 1,    unit: "oz",   item: "parmesan",          note: "portion per container",          cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
     ],
   },
   {
@@ -211,10 +231,10 @@ const RECIPES = [
     method: ["Add all sauce ingredients and chicken to slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Remove chicken. Blend sauce smooth with immersion blender directly in cooker.","Shred or slice chicken and return to sauce. Stir to coat.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "The immersion blender is non-negotiable — blending the roasted peppers into the tomato base is what makes this sauce. Add heavy cream at serving only, not during freezing, to prevent separation.",
     levers: [
-      { label: "2 tbsp heavy cream at serving",       batch: "1 cup (16 tbsp) heavy cream — portion per container",     cal: 100, protein: 0, carbs: 1,  fat: 10, fiber: 0 },
-      { label: "1 oz fresh mozzarella or burrata",     batch: "8 oz mozzarella or burrata — portion per container",      cal: 80,  protein: 6, carbs: 1,  fat: 6,  fiber: 0 },
-      { label: "1 tbsp olive oil drizzle at serving",  batch: "½ cup (8 tbsp) olive oil — portion per container",        cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
-      { label: "1 oz shredded parmesan on top",        batch: "8 oz parmesan — portion per container",                   cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
+      { label: "2 tbsp heavy cream at serving",       qty: 2, unit: "tbsp", item: "heavy cream",          note: "portion per container", cal: 100, protein: 0, carbs: 1,  fat: 10, fiber: 0 },
+      { label: "1 oz fresh mozzarella or burrata",     qty: 1, unit: "oz",   item: "mozzarella or burrata", note: "portion per container", cal: 80,  protein: 6, carbs: 1,  fat: 6,  fiber: 0 },
+      { label: "1 tbsp olive oil drizzle at serving",  qty: 1, unit: "tbsp", item: "olive oil",            note: "portion per container", cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1 oz shredded parmesan on top",        qty: 1, unit: "oz",   item: "parmesan",             note: "portion per container", cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
     ],
   },
   {
@@ -241,10 +261,10 @@ const RECIPES = [
     ],
     tip: "Chipotles in adobo vary in heat by brand — La Costeña runs hotter than San Marcos. Start with 3 peppers the first batch and adjust up. The adobo sauce itself carries a lot of the flavor, so don't skip it. Freezes exceptionally well.",
     levers: [
-      { label: "1/2 avocado at serving",      batch: "4 avocados — slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
-      { label: "2 tbsp full-fat sour cream",   batch: "1 cup (16 tbsp) sour cream — portion per container",      cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
-      { label: "1 oz Mexican cheese blend",     batch: "8 oz (1 bag) Mexican cheese — portion per container",     cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
-      { label: "1 tbsp olive oil drizzle",      batch: "½ cup (8 tbsp) olive oil — portion per container",        cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1/2 avocado at serving",      qty: 0.5, unit: "avocado", item: "avocado",              note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
+      { label: "2 tbsp full-fat sour cream",   qty: 2,   unit: "tbsp",    item: "sour cream",           note: "portion per container",                       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
+      { label: "1 oz Mexican cheese blend",     qty: 1,   unit: "oz",      item: "Mexican cheese blend", note: "portion per container",                       cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
+      { label: "1 tbsp olive oil drizzle",      qty: 1,   unit: "tbsp",    item: "olive oil",            note: "portion per container",                       cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
     ],
   },
   {
@@ -272,10 +292,10 @@ const RECIPES = [
     ],
     tip: "Lemon juice mellows significantly during slow cooking — don't be shy with it. The zest holds more flavor than the juice; adding fresh zest at serving is the easiest way to punch it back up. Lightest calorie base in the rotation.",
     levers: [
-      { label: "1 tbsp olive oil drizzle at serving", batch: "½ cup (8 tbsp) olive oil — portion per container",           cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
-      { label: "1 oz feta cheese crumbled on top",    batch: "8 oz block feta — crumble and portion per container",       cal: 75,  protein: 4, carbs: 1,  fat: 6,  fiber: 0 },
-      { label: "1/4 cup white beans mixed in",         batch: "2 cups (1 can) white beans — stir into batch after cooking", cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
-      { label: "2 tbsp hummus at serving",              batch: "1 cup (16 tbsp) hummus — portion per container",            cal: 70,  protein: 2, carbs: 6,  fat: 5,  fiber: 2 },
+      { label: "1 tbsp olive oil drizzle at serving", qty: 1,    unit: "tbsp", item: "olive oil",    note: "portion per container",               cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1 oz feta cheese crumbled on top",    qty: 1,    unit: "oz",   item: "feta cheese",  note: "crumble and portion per container",    cal: 75,  protein: 4, carbs: 1,  fat: 6,  fiber: 0 },
+      { label: "1/4 cup white beans mixed in",         qty: 0.25, unit: "cup",  item: "white beans",  note: "stir into batch after cooking",        cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
+      { label: "2 tbsp hummus at serving",              qty: 2,    unit: "tbsp", item: "hummus",       note: "portion per container",               cal: 70,  protein: 2, carbs: 6,  fat: 5,  fiber: 2 },
     ],
   },
   {
@@ -300,10 +320,10 @@ const RECIPES = [
     ],
     tip: "The cornstarch slurry at the end is what separates teriyaki from plain soy chicken — don't skip it. If you forget, reduce the cooking juices in a saucepan for 5 minutes after shredding. Glaze thickens further as it cools in containers.",
     levers: [
-      { label: "1 tbsp sesame seeds on top",           batch: "½ cup sesame seeds — sprinkle per container at packing",     cal: 50,  protein: 2, carbs: 2,  fat: 4,  fiber: 1 },
-      { label: "1/2 cup edamame mixed in",              batch: "4 cups (32 oz) edamame — stir into batch after shredding",   cal: 95,  protein: 8, carbs: 7,  fat: 4,  fiber: 4 },
-      { label: "1 tbsp peanut butter in sauce",         batch: "½ cup (8 tbsp) peanut butter — whisk into sauce before cooking", cal: 95, protein: 4, carbs: 3, fat: 8, fiber: 0.5 },
-      { label: "Extra 1 tbsp teriyaki drizzle",         batch: "½ cup (8 tbsp) teriyaki sauce — portion per container",      cal: 35,  protein: 1, carbs: 7,  fat: 0,  fiber: 0 },
+      { label: "1 tbsp sesame seeds on top",           qty: 1,   unit: "tbsp", item: "sesame seeds",  note: "sprinkle per container at packing",   cal: 50,  protein: 2, carbs: 2,  fat: 4,  fiber: 1 },
+      { label: "1/2 cup edamame mixed in",              qty: 0.5, unit: "cup",  item: "edamame",       note: "stir into batch after shredding",     cal: 95,  protein: 8, carbs: 7,  fat: 4,  fiber: 4 },
+      { label: "1 tbsp peanut butter in sauce",         qty: 1,   unit: "tbsp", item: "peanut butter", note: "whisk into sauce before cooking",     cal: 95, protein: 4, carbs: 3, fat: 8, fiber: 0.5 },
+      { label: "Extra 1 tbsp teriyaki drizzle",         qty: 1,   unit: "tbsp", item: "teriyaki sauce", note: "portion per container",               cal: 35,  protein: 1, carbs: 7,  fat: 0,  fiber: 0 },
     ],
   },
   {
@@ -329,10 +349,10 @@ const RECIPES = [
     ],
     tip: "Full-fat coconut milk is non-negotiable — light coconut milk splits and turns grainy when frozen. Red curry paste varies wildly by brand; Maesri is hotter than Mae Ploy. Start with 2 tbsp if you're heat-sensitive. Highest calorie base in the rotation — built for high intake days.",
     levers: [
-      { label: "2 tbsp coconut milk drizzle",   batch: "1 cup (16 tbsp) coconut milk — portion per container",        cal: 60,  protein: 0, carbs: 2,  fat: 6,  fiber: 0 },
-      { label: "1 oz roasted cashews on top",    batch: "8 oz cashews — portion per container, add at serving",        cal: 160, protein: 5, carbs: 9,  fat: 13, fiber: 1 },
-      { label: "1/4 cup chickpeas mixed in",      batch: "2 cups (1 can) chickpeas — stir into batch after shredding", cal: 90,  protein: 5, carbs: 15, fat: 1,  fiber: 4 },
-      { label: "Extra 1 tsp curry paste",         batch: "8 tsp (about 2½ tbsp) curry paste — stir into batch",        cal: 10,  protein: 0, carbs: 2,  fat: 0,  fiber: 0 },
+      { label: "2 tbsp coconut milk drizzle",   qty: 2,    unit: "tbsp", item: "coconut milk",     note: "portion per container",          cal: 60,  protein: 0, carbs: 2,  fat: 6,  fiber: 0 },
+      { label: "1 oz roasted cashews on top",    qty: 1,    unit: "oz",   item: "roasted cashews",  note: "portion per container, add at serving", cal: 160, protein: 5, carbs: 9,  fat: 13, fiber: 1 },
+      { label: "1/4 cup chickpeas mixed in",      qty: 0.25, unit: "cup",  item: "chickpeas",        note: "stir into batch after shredding", cal: 90,  protein: 5, carbs: 15, fat: 1,  fiber: 4 },
+      { label: "Extra 1 tsp curry paste",         qty: 1,    unit: "tsp",  item: "curry paste",      note: "stir into batch",                cal: 10,  protein: 0, carbs: 2,  fat: 0,  fiber: 0 },
     ],
   },
   {
@@ -358,10 +378,10 @@ const RECIPES = [
     ],
     tip: "Use a quality Dijon — generic yellow mustard tastes flat after slow cooking. The honey caramelizes slightly and the sauce thickens on its own without cornstarch. If it looks thin after cooking, remove the lid for the last 30 minutes. Pairs exceptionally well with Brussels sprouts.",
     levers: [
-      { label: "1 tbsp extra honey mustard at serving", batch: "½ cup (8 tbsp) honey mustard — portion per container",    cal: 55,  protein: 1, carbs: 6,  fat: 3,  fiber: 0 },
-      { label: "1 oz shredded cheddar on top",           batch: "8 oz (1 bag) shredded cheddar — portion per container",  cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
-      { label: "1/2 avocado at serving",                  batch: "4 avocados — slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
-      { label: "1 tbsp bacon bits on top",                batch: "½ cup (8 tbsp) real bacon bits — portion per container", cal: 40,  protein: 3, carbs: 0,  fat: 3,  fiber: 0 },
+      { label: "1 tbsp extra honey mustard at serving", qty: 1,   unit: "tbsp",    item: "honey mustard",  note: "portion per container",                       cal: 55,  protein: 1, carbs: 6,  fat: 3,  fiber: 0 },
+      { label: "1 oz shredded cheddar on top",           qty: 1,   unit: "oz",      item: "shredded cheddar", note: "portion per container",                     cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
+      { label: "1/2 avocado at serving",                  qty: 0.5, unit: "avocado", item: "avocado",        note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
+      { label: "1 tbsp bacon bits on top",                qty: 1,   unit: "tbsp",    item: "real bacon bits", note: "portion per container",                     cal: 40,  protein: 3, carbs: 0,  fat: 3,  fiber: 0 },
     ],
   },
   {
@@ -371,10 +391,10 @@ const RECIPES = [
     method: ["Rub dry seasonings over all chicken thighs.","Add chicken and broth to slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred chicken with two forks.","Toss shredded chicken in Frank's Buffalo sauce AFTER shredding — never during cooking.","Portion over rice and veggies. Cool then freeze."],
     tip: "Frank's Buffalo is nearly calorie-free — basically vinegar and cayenne. Best flavor-to-calorie ratio in the rotation. Lowest calorie base overall, ideal for rest days. Never cook the buffalo sauce — add it after shredding.",
     levers: [
-      { label: "1 tbsp light ranch drizzle", batch: "½ cup (8 tbsp) light ranch — portion per container",        cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
-      { label: "1 oz blue cheese crumbles",   batch: "8 oz blue cheese crumbles — portion per container",        cal: 100, protein: 6, carbs: 1, fat: 8,  fiber: 0 },
-      { label: "1/2 avocado at serving",      batch: "4 avocados — slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
-      { label: "1 tbsp full-fat ranch",       batch: "½ cup (8 tbsp) full-fat ranch — portion per container",    cal: 70,  protein: 0, carbs: 1, fat: 7,  fiber: 0 },
+      { label: "1 tbsp light ranch drizzle", qty: 1,   unit: "tbsp",    item: "light ranch",         note: "portion per container",                       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
+      { label: "1 oz blue cheese crumbles",   qty: 1,   unit: "oz",      item: "blue cheese crumbles", note: "portion per container",                      cal: 100, protein: 6, carbs: 1, fat: 8,  fiber: 0 },
+      { label: "1/2 avocado at serving",      qty: 0.5, unit: "avocado", item: "avocado",             note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
+      { label: "1 tbsp full-fat ranch",       qty: 1,   unit: "tbsp",    item: "full-fat ranch",      note: "portion per container",                       cal: 70,  protein: 0, carbs: 1, fat: 7,  fiber: 0 },
     ],
   },
 ];
@@ -383,21 +403,48 @@ const RECIPES = [
 //  STATE
 // ═══════════════════════════════════════════════════
 
-let state = {
-  targetCal:      2750,
-  targetProtein:  175,
-  targetFiber:    30,
-  riceVal:        1.5,
+const STORAGE_KEY = "mealPrepHubState";
+
+const DEFAULT_STATE = {
+  targetCal:       2750,
+  targetProtein:   175,
+  targetFiber:     30,
+  riceVal:         1.5,
   veggieOverrides: {},  // { recipeId: veggieId } — only set when user overrides
-  cuties:         true,
-  riceCrispy:     false,
-  levers:         {},   // { recipeId: Set<number> }
-  activeId:       null,
-  showMethod:     false,
+  cuties:          true,
+  riceCrispy:      false,
+  levers:          {},   // { recipeId: number[] } — arrays in storage, Sets at runtime
+  activeId:        null,
+  showMethod:      false,
+  servings:        BASE_SERVINGS,
+  morning:         DEFAULT_MORNING,
+  thisWeeksBatch:  null,
+  editingMorning:  false,
 };
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    const levers = {};
+    Object.keys(saved.levers || {}).forEach(k => { levers[k] = new Set(saved.levers[k]); });
+    return Object.assign({}, DEFAULT_STATE, saved, { levers });
+  } catch (e) {
+    return Object.assign({}, DEFAULT_STATE);
+  }
+}
+
+function saveState() {
+  const levers = {};
+  Object.keys(state.levers).forEach(k => { levers[k] = Array.from(state.levers[k]); });
+  const toSave = Object.assign({}, state, { levers });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+}
+
+let state = loadState();
 
 function setState(updates) {
   state = Object.assign({}, state, updates);
+  saveState();
   render();
 }
 
@@ -416,6 +463,27 @@ function add(...items) {
 }
 
 function clamp(n) { return Math.round(Math.max(0, n)); }
+
+function fmtNum(n) {
+  if (Math.abs(n - Math.round(n)) < 0.01) return String(Math.round(n));
+  return (Math.round(n * 100) / 100).toString();
+}
+
+// Builds a human batch-quantity string scaled to the current serving count.
+function formatQty(qtyPerServing, unit, servings) {
+  const total = qtyPerServing * servings;
+  if (unit === "tbsp" && total >= 16) return `${fmtNum(total / 16)} cup${total / 16 !== 1 ? "s" : ""} (${fmtNum(total)} tbsp)`;
+  if (unit === "tsp"  && total >= 3)  return `${fmtNum(total / 3)} tbsp (${fmtNum(total)} tsp)`;
+  const plural = total !== 1 ? "s" : "";
+  if (unit === "avocado")  return `${fmtNum(total)} avocado${plural}`;
+  if (unit === "tortilla") return `${fmtNum(total)} tortilla${plural}`;
+  if (unit === "cup")      return `${fmtNum(total)} cup${plural}`;
+  return `${fmtNum(total)} ${unit}`;
+}
+
+function leverBatchText(lv, servings) {
+  return `${formatQty(lv.qty, lv.unit, servings)} ${lv.item} — ${lv.note}`;
+}
 
 function getLunchMacros(rec) {
   const rice      = RICE.find(r => r.value === state.riceVal);
@@ -459,6 +527,23 @@ function render() {
     input.addEventListener("click", function(e) { e.stopPropagation(); });
   });
 
+  const servingsInput = document.querySelector("[data-servings]");
+  if (servingsInput) {
+    servingsInput.addEventListener("input", function() {
+      setState({ servings: parseInt(this.value) || BASE_SERVINGS });
+    });
+    servingsInput.addEventListener("click", function(e) { e.stopPropagation(); });
+  }
+
+  document.querySelectorAll("[data-morning]").forEach(input => {
+    input.addEventListener("change", function() {
+      const key = this.dataset.morning;
+      const val = parseFloat(this.value) || 0;
+      setState({ morning: Object.assign({}, state.morning, { [key]: val }) });
+    });
+    input.addEventListener("click", function(e) { e.stopPropagation(); });
+  });
+
   attachEvents();
 }
 
@@ -491,8 +576,8 @@ function renderGrid(rice) {
   const lunchRange = RECIPES.map(r => getLunchMacros(r).cal);
   const lunchMin = Math.round(Math.min(...lunchRange));
   const lunchMax = Math.round(Math.max(...lunchRange));
-  const dinnerMin = Math.round(state.targetCal - MORNING.cal - lunchMax);
-  const dinnerMax = Math.round(state.targetCal - MORNING.cal - lunchMin);
+  const dinnerMin = Math.round(state.targetCal - state.morning.cal - lunchMax);
+  const dinnerMax = Math.round(state.targetCal - state.morning.cal - lunchMin);
 
   return `
     ${headerHTML()}
@@ -515,14 +600,22 @@ function renderGrid(rice) {
             <button class="pill${state.riceCrispy ? ' active-green' : ''}" data-toggle="riceCrispy">🍬 Rice Crispy</button>
           </div>
         </div>
+        <div>
+          <div class="control-label">Batch Size</div>
+          <div class="servings-row">
+            <input class="servings-slider" type="range" min="4" max="12" step="1" value="${state.servings}" data-servings="1" />
+            <span class="servings-val">${state.servings} servings</span>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="budget">
       <div class="budget-tile" style="border-top-color:#9CA3AF">
         <div class="budget-label">☀️ Morning</div>
-        <div class="budget-num" style="color:#F9FAFB">${MORNING.cal}</div>
-        <div class="budget-sub">${MORNING.protein}g protein · ${MORNING.fiber}g fiber</div>
+        <div class="budget-num" style="color:#F9FAFB">${state.morning.cal}</div>
+        <div class="budget-sub">${state.morning.protein}g protein · ${state.morning.fiber}g fiber</div>
+        <button class="link-btn" style="margin-top:4px" data-toggle-morning-edit="1">${state.editingMorning ? "Close" : "Edit"}</button>
       </div>
       <div class="budget-sep">+</div>
       <div class="budget-tile" style="border-top-color:#FF6B35">
@@ -538,15 +631,40 @@ function renderGrid(rice) {
       </div>
     </div>
 
+    ${state.editingMorning ? `
+      <div style="margin:10px 14px 0;background:#111827;border:1px solid #1F2937;border-radius:8px;padding:10px 12px">
+        <div class="section-label" style="margin-bottom:0">Edit Morning Meal</div>
+        <div class="morning-edit-grid">
+          ${["cal","protein","carbs","fat","fiber"].map(k => `
+            <div class="morning-field">
+              <label>${k}</label>
+              <input type="number" data-morning="${k}" value="${state.morning[k]}" min="0" />
+            </div>`).join("")}
+        </div>
+      </div>` : ""}
+
+    ${state.thisWeeksBatch ? (() => {
+      const rec = RECIPES.find(r => r.id === state.thisWeeksBatch);
+      return rec ? `
+        <div class="batch-banner">
+          <span style="font-size:12px"><strong>📌 This Week's Batch:</strong> ${rec.emoji} ${rec.name}</span>
+          <div style="display:flex;gap:6px">
+            <button class="batch-toggle-btn" style="background:#10B98120;color:#10B981;border-color:#10B98140" data-recipe="${rec.id}">View</button>
+            <button class="batch-toggle-btn" style="background:transparent;color:#6B7280" data-clear-batch="1">Clear</button>
+          </div>
+        </div>` : "";
+    })() : ""}
+
     <div class="grid">
       ${RECIPES.map(rec => {
         const m        = getLunchMacros(rec);
         const lvSet    = state.levers[rec.id] || new Set();
         const recVeggie = VEGGIES.find(v => v.id === (state.veggieOverrides[rec.id] || rec.veggie));
+        const isBatch  = state.thisWeeksBatch === rec.id;
         return `
-          <div class="recipe-card" style="border-top-color:${rec.color}" data-recipe="${rec.id}">
+          <div class="recipe-card" style="border-top-color:${rec.color}${isBatch ? ';outline:2px solid #10B981' : ''}" data-recipe="${rec.id}">
             <div class="recipe-emoji">${rec.emoji}</div>
-            <div class="recipe-name">${rec.name}</div>
+            <div class="recipe-name">${rec.name} ${isBatch ? '📌' : ''}</div>
             <div style="font-size:10px;color:#6B7280;margin-bottom:9px">${rec.tag} · ${recVeggie.emoji} ${recVeggie.label}</div>
             <div class="mb-6">
               <span class="chip" style="color:#FF6B35;background:#FF6B3518">${clamp(m.cal)} cal</span>
@@ -559,7 +677,7 @@ function renderGrid(rice) {
       }).join("")}
     </div>
 
-    <div class="footer">All recipes: 4.5 lb batch · 8 servings at 9 oz raw · Slow cooker · Freezer-ready</div>
+    <div class="footer">All recipes: written for 8 servings (4.5 lb batch) · adjust with the Batch Size slider · Slow cooker · Freezer-ready</div>
   `;
 }
 
@@ -573,14 +691,14 @@ function renderDetail(rice, recipe) {
   const lunch  = getLunchMacros(recipe);
   const lvSet  = state.levers[recipe.id] || new Set();
   const dinner = {
-    cal:     state.targetCal     - MORNING.cal     - lunch.cal,
-    protein: state.targetProtein - MORNING.protein - lunch.protein,
-    fiber:   state.targetFiber   - MORNING.fiber   - lunch.fiber,
+    cal:     state.targetCal     - state.morning.cal     - lunch.cal,
+    protein: state.targetProtein - state.morning.protein - lunch.protein,
+    fiber:   state.targetFiber   - state.morning.fiber   - lunch.fiber,
   };
 
-  const lunchBudgetCal  = clamp(state.targetCal     - MORNING.cal);
-  const lunchBudgetProt = clamp(state.targetProtein - MORNING.protein);
-  const lunchBudgetFib  = clamp(state.targetFiber   - MORNING.fiber);
+  const lunchBudgetCal  = clamp(state.targetCal     - state.morning.cal);
+  const lunchBudgetProt = clamp(state.targetProtein - state.morning.protein);
+  const lunchBudgetFib  = clamp(state.targetFiber   - state.morning.fiber);
 
   const breakdownRows = [
     { label: "9 oz chicken thigh",             ...CHICKEN },
@@ -604,10 +722,13 @@ function renderDetail(rice, recipe) {
     <div class="recipe-head">
       <button class="back-btn" data-back="1">← Recipes</button>
       <span class="recipe-head-emoji">${recipe.emoji}</span>
-      <div>
+      <div style="flex:1">
         <div class="recipe-head-name">${recipe.name}</div>
-        <div class="recipe-head-sub">${recipe.tag} · 4.5 lb batch · 8 servings · Freezer-ready</div>
+        <div class="recipe-head-sub">${recipe.tag} · ${fmtNum(state.servings * RAW_OZ_PER_SERVING / 16)} lb batch · ${state.servings} servings · Freezer-ready</div>
       </div>
+      <button class="batch-toggle-btn" style="${state.thisWeeksBatch === recipe.id ? 'background:#10B98120;color:#10B981;border-color:#10B98140' : 'background:transparent;color:#6B7280'}" data-set-batch="${recipe.id}">
+        ${state.thisWeeksBatch === recipe.id ? '✓ This Week' : '📌 Set as This Week'}
+      </button>
     </div>
 
     <div class="detail-body">
@@ -651,7 +772,7 @@ function renderDetail(rice, recipe) {
             ${!isOverridden ? `<span class="tag" style="color:#10B981;background:#10B98120">Recommended</span>` : `<span class="tag" style="color:#FF6B35;background:#FF6B3520">Overridden</span>`}
             <span style="font-size:10px;color:#6B7280;margin-left:auto">${activeVeggie.cal} cal · ${activeVeggie.protein}g prot · ${activeVeggie.fiber}g fiber</span>
           </div>
-          <div style="font-size:10px;color:#10B981;padding:4px 6px;background:#10B98110;border-radius:4px;border-left:2px solid #10B981;margin-bottom:8px">📦 4 cups ${activeVeggie.label.toLowerCase()} for full batch (½ cup × 8 servings)</div>
+          <div style="font-size:10px;color:#10B981;padding:4px 6px;background:#10B98110;border-radius:4px;border-left:2px solid #10B981;margin-bottom:8px">📦 ${formatQty(0.5, "cup", state.servings)} ${activeVeggie.label.toLowerCase()} for full batch (½ cup × ${state.servings} servings)</div>
           <div style="display:flex;gap:5px;flex-wrap:wrap">
             ${VEGGIES.map(v => `
               <button class="pill${activeVeggieId === v.id ? ' active-orange' : ''}" data-veggie-override="${v.id}">
@@ -675,10 +796,27 @@ function renderDetail(rice, recipe) {
               <div style="flex:1">
                 <div class="lever-label${active ? ' active' : ''}">${lv.label}</div>
                 <div class="lever-macros">+${lv.cal} cal · +${lv.protein}g prot · +${Math.round(lv.fiber)}g fiber · +${lv.fat}g fat</div>
-                ${active ? `<div style="font-size:10px;color:#FF6B35;margin-top:4px;padding:4px 6px;background:#FF6B3510;border-radius:4px;border-left:2px solid #FF6B35">📦 ${lv.batch}</div>` : ""}
+                ${active ? `<div style="font-size:10px;color:#FF6B35;margin-top:4px;padding:4px 6px;background:#FF6B3510;border-radius:4px;border-left:2px solid #FF6B35">📦 ${leverBatchText(lv, state.servings)}</div>` : ""}
               </div>
             </div>`;
         }).join("")}
+      </div>
+
+      <!-- Shopping List (this batch) -->
+      <div class="mb-14">
+        <div class="section-label">📋 Shopping List for This Batch (${state.servings} servings)</div>
+        <div class="shopping-list">
+          <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${fmtNum(state.servings * RAW_OZ_PER_SERVING / 16)} lbs (${state.servings * RAW_OZ_PER_SERVING} oz) raw boneless skinless chicken thighs</span></div>
+          <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${formatQty(state.riceVal, "cup", state.servings)} cooked white rice (cook fresh to yield this amount)</span></div>
+          <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${formatQty(0.5, "cup", state.servings)} ${activeVeggie.label.toLowerCase()}</span></div>
+          ${state.cuties ? `<div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${state.servings * 2} Cuties (mandarins)</span></div>` : ""}
+          ${state.riceCrispy ? `<div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${state.servings} Rice Crispy Treats</span></div>` : ""}
+          ${recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => `
+            <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${leverBatchText(lv, state.servings)}</span></div>`).join("")}
+          <div style="font-size:10px;color:#6B7280;margin-top:8px;padding-top:8px;border-top:1px solid #1F2937">
+            Plus the sauce/seasoning ingredients below — recipe is written for ${BASE_SERVINGS} servings, so scale each one by ×${fmtNum(state.servings / BASE_SERVINGS)} for ${state.servings} servings.
+          </div>
+        </div>
       </div>
 
       <!-- Breakdown -->
@@ -722,7 +860,7 @@ function renderDetail(rice, recipe) {
           }).join("")}
         </div>
         <div class="dinner-footer">
-          Morning ${MORNING.cal} cal + Lunch ${clamp(lunch.cal)} cal = ${clamp(MORNING.cal + lunch.cal)} of ${state.targetCal} cal daily target
+          Morning ${state.morning.cal} cal + Lunch ${clamp(lunch.cal)} cal = ${clamp(state.morning.cal + lunch.cal)} of ${state.targetCal} cal daily target
         </div>
       </div>
 
@@ -734,11 +872,11 @@ function renderDetail(rice, recipe) {
         </button>
         ${state.showMethod ? `
           <div class="recipe-body">
-            <div class="section-label mb-8">Ingredients (Full 4.5 lb Batch / 8 Servings)</div>
-            ${recipe.ingredients.map(ing => `
+            <div class="section-label mb-8">Ingredients (written for ${BASE_SERVINGS} servings${state.servings !== BASE_SERVINGS ? ` — scale ×${fmtNum(state.servings / BASE_SERVINGS)} for your ${state.servings}-serving batch` : ""})</div>
+            ${recipe.ingredients.map((ing, i) => `
               <div class="ingr-item">
                 <span style="color:${recipe.color};font-size:14px;flex-shrink:0">·</span>
-                <span>${ing}</span>
+                <span>${i === 0 ? `${fmtNum(state.servings * RAW_OZ_PER_SERVING / 16)} lbs boneless skinless chicken thighs` : ing}</span>
               </div>`).join("")}
             <div class="section-label" style="margin-top:14px;margin-bottom:8px">Method</div>
             ${recipe.method.map((step, i) => `
@@ -762,16 +900,6 @@ function renderDetail(rice, recipe) {
 
 // Single delegated listener attached once — reads live `state` on every click
 document.getElementById("root").addEventListener("click", function(e) {
-  const btn = e.target.closest("[data-phase]");
-  if (btn) {
-    const p = PHASES.find(x => x.id === btn.dataset.phase);
-    setState({ phaseId: p.id, riceVal: p.riceDefault });
-    return;
-  }
-
-  const vegBtn = e.target.closest("[data-veggie]");
-  if (vegBtn) { setState({ veggieId: vegBtn.dataset.veggie }); return; }
-
   const riceBtn = e.target.closest("[data-rice]");
   if (riceBtn) { setState({ riceVal: parseFloat(riceBtn.dataset.rice) }); return; }
 
@@ -817,6 +945,19 @@ document.getElementById("root").addEventListener("click", function(e) {
     toggleLever(state.activeId, parseInt(leverBtn.dataset.lever));
     return;
   }
+
+  const morningEditBtn = e.target.closest("[data-toggle-morning-edit]");
+  if (morningEditBtn) { setState({ editingMorning: !state.editingMorning }); return; }
+
+  const setBatchBtn = e.target.closest("[data-set-batch]");
+  if (setBatchBtn) {
+    const id = setBatchBtn.dataset.setBatch;
+    setState({ thisWeeksBatch: state.thisWeeksBatch === id ? null : id });
+    return;
+  }
+
+  const clearBatchBtn = e.target.closest("[data-clear-batch]");
+  if (clearBatchBtn) { setState({ thisWeeksBatch: null }); return; }
 });
 
 function attachEvents() {} // no-op, kept for render() call compatibility
