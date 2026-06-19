@@ -416,7 +416,6 @@ const DEFAULT_STATE = {
   riceCrispy:      false,
   levers:          {},   // { recipeId: number[] } — arrays in storage, Sets at runtime
   activeId:        null,
-  showMethod:      false,
   servings:        BASE_SERVINGS,
   morning:         DEFAULT_MORNING,
   thisWeeksBatch:  null,
@@ -810,9 +809,9 @@ function renderDetail(rice, recipe) {
         }).join("")}
       </div>
 
-      <!-- Shopping List (this batch) -->
+      <!-- Ingredients (full shopping list, this batch) -->
       <div class="mb-14">
-        <div class="section-label">📋 Shopping List for This Batch (${state.servings} servings)</div>
+        <div class="section-label">📋 Ingredients (${state.servings} servings)</div>
         <div class="shopping-list">
           <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${fmtNum(state.servings * RAW_OZ_PER_SERVING / 16)} lbs (${formatGrams(RAW_G_PER_SERVING, state.servings)}) raw boneless skinless chicken thighs</span></div>
           <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${formatOriginalQty(state.riceVal, "cup", state.servings)} (${formatGrams(rice.grams, state.servings)}) cooked white rice (cook fresh to yield this amount)</span></div>
@@ -822,8 +821,10 @@ function renderDetail(rice, recipe) {
           ${recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => `
             <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${leverBatchText(lv, state.servings)}</span></div>`).join("")}
           <div style="font-size:10px;color:#6B7280;margin-top:8px;padding-top:8px;border-top:1px solid #1F2937">
-            Plus the sauce/seasoning ingredients below — recipe is written for ${BASE_SERVINGS} servings, so scale each one by ×${fmtNum(state.servings / BASE_SERVINGS)} for ${state.servings} servings.
+            Plus the sauce/seasoning ingredients (written for ${BASE_SERVINGS} servings — scale ×${fmtNum(state.servings / BASE_SERVINGS)} for your ${state.servings}-serving batch):
           </div>
+          ${recipe.ingredients.slice(1).map(ing => `
+            <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${ing}</span></div>`).join("")}
         </div>
       </div>
 
@@ -872,28 +873,15 @@ function renderDetail(rice, recipe) {
         </div>
       </div>
 
-      <!-- Recipe Toggle -->
+      <!-- Method -->
       <div class="mt-14">
-        <button class="recipe-toggle" data-method-toggle="1">
-          <span>Full Recipe — Ingredients & Method</span>
-          <span>${state.showMethod ? "▲" : "▼"}</span>
-        </button>
-        ${state.showMethod ? `
-          <div class="recipe-body">
-            <div class="section-label mb-8">Ingredients (written for ${BASE_SERVINGS} servings${state.servings !== BASE_SERVINGS ? ` — scale ×${fmtNum(state.servings / BASE_SERVINGS)} for your ${state.servings}-serving batch` : ""})</div>
-            ${recipe.ingredients.map((ing, i) => `
-              <div class="ingr-item">
-                <span style="color:${recipe.color};font-size:14px;flex-shrink:0">·</span>
-                <span>${i === 0 ? `${fmtNum(state.servings * RAW_OZ_PER_SERVING / 16)} lbs (${formatGrams(RAW_G_PER_SERVING, state.servings)}) boneless skinless chicken thighs` : ing}</span>
-              </div>`).join("")}
-            <div class="section-label" style="margin-top:14px;margin-bottom:8px">Method</div>
-            ${recipe.method.map((step, i) => `
-              <div class="step-row">
-                <div class="step-num" style="background:${recipe.color}">${i + 1}</div>
-                <div class="step-text">${step}</div>
-              </div>`).join("")}
-            <div class="tip-box" style="border-left:3px solid ${recipe.color}">💡 ${recipe.tip}</div>
-          </div>` : ""}
+        <div class="section-label">Method</div>
+        ${recipe.method.map((step, i) => `
+          <div class="step-row">
+            <div class="step-num" style="background:${recipe.color}">${i + 1}</div>
+            <div class="step-text">${step}</div>
+          </div>`).join("")}
+        <div class="tip-box" style="border-left:3px solid ${recipe.color}">💡 ${recipe.tip}</div>
       </div>
 
     </div>
@@ -919,10 +907,10 @@ document.getElementById("root").addEventListener("click", function(e) {
   }
 
   const recBtn = e.target.closest("[data-recipe]");
-  if (recBtn) { setState({ activeId: recBtn.dataset.recipe, showMethod: false }); return; }
+  if (recBtn) { setState({ activeId: recBtn.dataset.recipe }); return; }
 
   const backBtn = e.target.closest("[data-back]");
-  if (backBtn) { setState({ activeId: null, showMethod: false }); return; }
+  if (backBtn) { setState({ activeId: null }); return; }
 
   const veggieOverrideBtn = e.target.closest("[data-veggie-override]");
   if (veggieOverrideBtn && state.activeId) {
@@ -944,9 +932,6 @@ document.getElementById("root").addEventListener("click", function(e) {
     setState({ veggieOverrides: overrides });
     return;
   }
-
-  const methodBtn = e.target.closest("[data-method-toggle]");
-  if (methodBtn) { setState({ showMethod: !state.showMethod }); return; }
 
   const leverBtn = e.target.closest("[data-lever]");
   if (leverBtn && state.activeId) {
