@@ -689,11 +689,11 @@ function renderDetail(rice, recipe) {
   const breakdownRows = [
     { ...CHICKEN,      label: "Chicken thigh (255g raw)" },
     { ...rice,         label: `White rice (${rice.label})` },
-    { ...activeVeggie, label: `${activeVeggie.emoji} ${activeVeggie.label} (${activeVeggie.grams}g)` },
+    { ...activeVeggie, label: `${activeVeggie.label} (${activeVeggie.grams}g)` },
     { ...recipe.sauce, label: recipe.name + " sauce" },
     ...(state.cuties     ? [{ ...CUTIES, label: "2 Cuties" }] : []),
     ...(state.riceCrispy ? [{ ...TREAT,  label: "Rice Crispy Treat" }] : []),
-    ...recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => ({ ...lv, label: "+ " + lv.label })),
+    ...recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => ({ ...lv, label: `+ ${lv.label} (${lv.qty}g)` })),
   ];
 
   function fiberBar(val, target, color) {
