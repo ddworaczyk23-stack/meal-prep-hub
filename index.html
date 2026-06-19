@@ -600,13 +600,6 @@ function renderGrid(rice) {
             <button class="pill${state.riceCrispy ? ' active-green' : ''}" data-toggle="riceCrispy">🍬 Rice Crispy</button>
           </div>
         </div>
-        <div>
-          <div class="control-label">Batch Size</div>
-          <div class="servings-row">
-            <input class="servings-slider" type="range" min="4" max="12" step="1" value="${state.servings}" data-servings="1" />
-            <span class="servings-val">${state.servings} servings</span>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -677,7 +670,7 @@ function renderGrid(rice) {
       }).join("")}
     </div>
 
-    <div class="footer">All recipes: written for 8 servings (4.5 lb batch) · adjust with the Batch Size slider · Slow cooker · Freezer-ready</div>
+    <div class="footer">All recipes: written for 8 servings (4.5 lb batch) · open a recipe to adjust batch size · Slow cooker · Freezer-ready</div>
   `;
 }
 
@@ -701,13 +694,13 @@ function renderDetail(rice, recipe) {
   const lunchBudgetFib  = clamp(state.targetFiber   - state.morning.fiber);
 
   const breakdownRows = [
-    { label: "9 oz chicken thigh",             ...CHICKEN },
-    { label: `White rice (${rice.label})`, ...rice },
-    { label: `${activeVeggie.emoji} ${activeVeggie.label} (1/2 cup)`, ...activeVeggie },
-    { label: recipe.name + " sauce",           ...recipe.sauce },
-    ...(state.cuties     ? [{ label: "2 Cuties",          ...CUTIES }] : []),
-    ...(state.riceCrispy ? [{ label: "Rice Crispy Treat", ...TREAT  }] : []),
-    ...recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => ({ label: "+ " + lv.label, ...lv })),
+    { ...CHICKEN,      label: "9 oz chicken thigh" },
+    { ...rice,         label: `White rice (${rice.label})` },
+    { ...activeVeggie, label: `${activeVeggie.emoji} ${activeVeggie.label} (1/2 cup)` },
+    { ...recipe.sauce, label: recipe.name + " sauce" },
+    ...(state.cuties     ? [{ ...CUTIES, label: "2 Cuties" }] : []),
+    ...(state.riceCrispy ? [{ ...TREAT,  label: "Rice Crispy Treat" }] : []),
+    ...recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => ({ ...lv, label: "+ " + lv.label })),
   ];
 
   function fiberBar(val, target, color) {
@@ -732,6 +725,15 @@ function renderDetail(rice, recipe) {
     </div>
 
     <div class="detail-body">
+
+      <!-- Batch Size -->
+      <div class="mb-14" style="background:#111827;border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div class="control-label" style="margin-bottom:0">Batch Size for This Recipe</div>
+        <div class="servings-row">
+          <input class="servings-slider" type="range" min="4" max="12" step="1" value="${state.servings}" data-servings="1" />
+          <span class="servings-val">${state.servings} servings</span>
+        </div>
+      </div>
 
       <!-- Live Macro Tiles -->
       <div style="background:#111827;border-radius:10px;padding:12px;margin-bottom:12px;border-top:3px solid ${recipe.color}">
