@@ -769,6 +769,31 @@ function renderDetail(rice, recipe) {
         </div>
       </div>
 
+      <!-- Dinner Headroom -->
+      <div class="dinner-card mb-14">
+        <div class="section-label" style="margin-bottom:10px">🌙 Dinner Headroom</div>
+        <div class="dinner-grid">
+          ${[
+            { label: "Calories left",  val: dinner.cal,     unit: "",  color: "#FF6B35" },
+            { label: "Protein left",   val: dinner.protein, unit: "g", color: "#60A5FA" },
+            { label: "Fiber left",     val: dinner.fiber,   unit: "g", color: "#10B981" },
+          ].map(m => {
+            const over = m.val < 0;
+            return `
+              <div class="dinner-tile">
+                <div class="dinner-num" style="color:${over ? '#EF4444' : m.color}">
+                  ${over ? "−" : ""}${Math.abs(Math.round(m.val))}${m.unit}
+                </div>
+                <div class="dinner-lbl">${m.label}</div>
+                ${over ? '<div class="dinner-over">over target</div>' : ""}
+              </div>`;
+          }).join("")}
+        </div>
+        <div class="dinner-footer">
+          Morning ${state.morning.cal} cal + Lunch ${clamp(lunch.cal)} cal = ${clamp(state.morning.cal + lunch.cal)} of ${state.targetCal} cal daily target
+        </div>
+      </div>
+
       <!-- Veggie -->
       <div class="mb-14">
         <div class="section-label">Vegetable (1/2 cup, ${activeVeggie.grams}g)</div>
@@ -845,31 +870,6 @@ function renderDetail(rice, recipe) {
             <span class="bd-prot">${clamp(lunch.protein)}g</span>
             <span class="bd-fib">${Math.round(lunch.fiber)}g</span>
           </div>
-        </div>
-      </div>
-
-      <!-- Dinner Headroom -->
-      <div class="dinner-card">
-        <div class="section-label" style="margin-bottom:10px">🌙 Dinner Headroom</div>
-        <div class="dinner-grid">
-          ${[
-            { label: "Calories left",  val: dinner.cal,     unit: "",  color: "#FF6B35" },
-            { label: "Protein left",   val: dinner.protein, unit: "g", color: "#60A5FA" },
-            { label: "Fiber left",     val: dinner.fiber,   unit: "g", color: "#10B981" },
-          ].map(m => {
-            const over = m.val < 0;
-            return `
-              <div class="dinner-tile">
-                <div class="dinner-num" style="color:${over ? '#EF4444' : m.color}">
-                  ${over ? "−" : ""}${Math.abs(Math.round(m.val))}${m.unit}
-                </div>
-                <div class="dinner-lbl">${m.label}</div>
-                ${over ? '<div class="dinner-over">over target</div>' : ""}
-              </div>`;
-          }).join("")}
-        </div>
-        <div class="dinner-footer">
-          Morning ${state.morning.cal} cal + Lunch ${clamp(lunch.cal)} cal = ${clamp(state.morning.cal + lunch.cal)} of ${state.targetCal} cal daily target
         </div>
       </div>
 
