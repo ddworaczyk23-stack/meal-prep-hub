@@ -147,13 +147,14 @@
 
 const DEFAULT_MORNING = { cal: 803, protein: 74, carbs: 85, fat: 22, fiber: 5 };
 const BASE_SERVINGS = 8;        // recipes are written for 8 servings (4.5 lb batch)
-const RAW_G_PER_SERVING = 255;  // raw chicken per serving (9 oz)
+const RAW_OZ_PER_SERVING = 9;   // raw chicken per serving — what's on the package
+const RAW_G_PER_SERVING = 255;  // gram add-on for slow cooker / container portioning
 
 const RICE = [
-  { value: 1,   label: "185g", grams: 185, cal: 200, protein: 4,  carbs: 44,  fat: 0, fiber: 1 },
-  { value: 1.5, label: "280g", grams: 280, cal: 300, protein: 6,  carbs: 66,  fat: 0, fiber: 1 },
-  { value: 2,   label: "370g", grams: 370, cal: 400, protein: 8,  carbs: 88,  fat: 0, fiber: 1 },
-  { value: 2.5, label: "465g", grams: 465, cal: 500, protein: 10, carbs: 110, fat: 0, fiber: 2 },
+  { value: 1,   label: "1 cup (185g)",    grams: 185, cal: 200, protein: 4,  carbs: 44,  fat: 0, fiber: 1 },
+  { value: 1.5, label: "1.5 cups (280g)", grams: 280, cal: 300, protein: 6,  carbs: 66,  fat: 0, fiber: 1 },
+  { value: 2,   label: "2 cups (370g)",   grams: 370, cal: 400, protein: 8,  carbs: 88,  fat: 0, fiber: 1 },
+  { value: 2.5, label: "2.5 cups (465g)", grams: 465, cal: 500, protein: 10, carbs: 110, fat: 0, fiber: 2 },
 ];
 
 const VEGGIES = [
@@ -179,10 +180,10 @@ const RECIPES = [
     method: ["Combine soy sauce, garlic, ginger, rice vinegar, honey, and broth.","Pour over chicken thighs in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred or slice chicken, toss in cooking juices.","Add sesame oil AFTER shredding — not during cooking, it turns bitter.","Portion over rice and veggies. Cool to room temp, then freeze."],
     tip: "Track raw chicken weight before loading the cooker. Cooked weight shrinks ~25%. Sesame oil added during cooking turns bitter — always add after.",
     levers: [
-      { label: "1 tbsp peanut butter in sauce",    qty: 16, unit: "g", item: "peanut butter",    note: "add to sauce before cooking",          cal: 95,  protein: 4, carbs: 3, fat: 8,  fiber: 0.5 },
-      { label: "1 tbsp crushed peanuts at serving", qty: 9,  unit: "g", item: "crushed peanuts",  note: "portion per container at packing",      cal: 50,  protein: 2, carbs: 2, fat: 4,  fiber: 0.5 },
-      { label: "Extra 1 tsp sesame oil drizzle",    qty: 5,  unit: "g", item: "sesame oil",       note: "portion per container at packing",      cal: 40,  protein: 0, carbs: 0, fat: 5,  fiber: 0   },
-      { label: "1/2 cup edamame mixed in",           qty: 75, unit: "g", item: "edamame",          note: "stir into batch after shredding",       cal: 95,  protein: 8, carbs: 7, fat: 4,  fiber: 4   },
+      { label: "1 tbsp peanut butter in sauce",    qty: 1,   unit: "tbsp", grams: 16, item: "peanut butter",    note: "add to sauce before cooking",          cal: 95,  protein: 4, carbs: 3, fat: 8,  fiber: 0.5 },
+      { label: "1 tbsp crushed peanuts at serving", qty: 1,   unit: "tbsp", grams: 9,  item: "crushed peanuts",  note: "portion per container at packing",      cal: 50,  protein: 2, carbs: 2, fat: 4,  fiber: 0.5 },
+      { label: "Extra 1 tsp sesame oil drizzle",    qty: 1,   unit: "tsp",  grams: 5,  item: "sesame oil",       note: "portion per container at packing",      cal: 40,  protein: 0, carbs: 0, fat: 5,  fiber: 0   },
+      { label: "1/2 cup edamame mixed in",           qty: 0.5, unit: "cup",  grams: 75, item: "edamame",          note: "stir into batch after shredding",       cal: 95,  protein: 8, carbs: 7, fat: 4,  fiber: 4   },
     ],
   },
   {
@@ -192,10 +193,10 @@ const RECIPES = [
     method: ["Mix BBQ sauce, paprika, garlic powder, onion powder, pepper, and vinegar.","Pour sauce over chicken in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Pull apart chicken with two forks. Toss in thickened cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "BBQ sauce is your main calorie trap — 2 tbsp can hit 80–90 cal and most people pour more. Measure it. Choose a brand under 12g sugar per 2 tbsp. Apple cider vinegar keeps the pull moist without adding calories.",
     levers: [
-      { label: "Extra 1 tbsp BBQ sauce at serving", qty: 17, unit: "g", item: "BBQ sauce",        note: "portion per container",                       cal: 30,  protein: 0, carbs: 7, fat: 0,  fiber: 0 },
-      { label: "1 oz shredded cheddar on top",       qty: 28, unit: "g", item: "shredded cheddar", note: "portion per container",                       cal: 110, protein: 7, carbs: 0, fat: 9,  fiber: 0 },
-      { label: "1 tbsp full-fat sour cream",          qty: 15, unit: "g", item: "sour cream",       note: "portion per container",                       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
-      { label: "1/2 avocado at serving",              qty: 75, unit: "g", item: "avocado",          note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
+      { label: "Extra 1 tbsp BBQ sauce at serving", qty: 1,   unit: "tbsp",    grams: 17, item: "BBQ sauce",        note: "portion per container",                       cal: 30,  protein: 0, carbs: 7, fat: 0,  fiber: 0 },
+      { label: "1 oz shredded cheddar on top",       qty: 1,   unit: "oz",      grams: 28, item: "shredded cheddar", note: "portion per container",                       cal: 110, protein: 7, carbs: 0, fat: 9,  fiber: 0 },
+      { label: "1 tbsp full-fat sour cream",          qty: 1,   unit: "tbsp",    grams: 15, item: "sour cream",       note: "portion per container",                       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
+      { label: "1/2 avocado at serving",              qty: 0.5, unit: "avocado", grams: 75, item: "avocado",          note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
     ],
   },
   {
@@ -205,10 +206,10 @@ const RECIPES = [
     method: ["Rub dry seasonings over all chicken thighs.","Place in slow cooker. Pour salsa and lime juice over top.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred chicken and toss in cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "Leanest base in the rotation — use on rest days when calories run lower. Add jalapeños or hot sauce for heat at zero calorie cost. Tomato-salsa base freezes exceptionally well.",
     levers: [
-      { label: "1/2 avocado at serving",         qty: 75, unit: "g", item: "avocado",              note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
-      { label: "2 tbsp full-fat sour cream",      qty: 30, unit: "g", item: "sour cream",           note: "portion per container",                       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
-      { label: "1 oz Mexican cheese blend",        qty: 28, unit: "g", item: "Mexican cheese blend", note: "portion per container",                       cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
-      { label: "Flour tortilla wrap (swap rice)",  qty: 45, unit: "g", item: "flour tortilla",       note: "store separately, wrap at each meal",         cal: 200, protein: 6, carbs: 36, fat: 3,  fiber: 1 },
+      { label: "1/2 avocado at serving",         qty: 0.5, unit: "avocado",  grams: 75, item: "avocado",              note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
+      { label: "2 tbsp full-fat sour cream",      qty: 2,   unit: "tbsp",     grams: 30, item: "sour cream",           note: "portion per container",                       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
+      { label: "1 oz Mexican cheese blend",        qty: 1,   unit: "oz",       grams: 28, item: "Mexican cheese blend", note: "portion per container",                       cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
+      { label: "Flour tortilla wrap (swap rice)",  qty: 1,   unit: "tortilla", grams: 45, item: "flour tortilla",       note: "store separately, wrap at each meal",         cal: 200, protein: 6, carbs: 36, fat: 3,  fiber: 1 },
     ],
   },
   {
@@ -218,10 +219,10 @@ const RECIPES = [
     method: ["Add crushed tomatoes, garlic, olive oil, sugar, and seasonings to slow cooker.","Nestle chicken thighs into the sauce.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred or slice chicken, stir back into sauce.","Optional: blend smooth with immersion blender.","Portion over rice and veggies. Cool then freeze."],
     tip: "Tomato-based sauces are the most freezer-stable — this reheats the best of all six. Red pepper flakes lose heat in the slow cooker, so add more at serving if needed.",
     levers: [
-      { label: "1 tbsp olive oil drizzle at serving", qty: 14, unit: "g", item: "olive oil",          note: "portion per container",          cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
-      { label: "1 oz burrata or ricotta on top",       qty: 28, unit: "g", item: "burrata or ricotta", note: "portion per container",          cal: 90,  protein: 6, carbs: 1,  fat: 7,  fiber: 0 },
-      { label: "1/4 cup white beans mixed in",          qty: 45, unit: "g", item: "white beans",       note: "stir into batch after cooking", cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
-      { label: "1 oz shredded parmesan on top",         qty: 28, unit: "g", item: "parmesan",          note: "portion per container",          cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
+      { label: "1 tbsp olive oil drizzle at serving", qty: 1,    unit: "tbsp", grams: 14, item: "olive oil",          note: "portion per container",          cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1 oz burrata or ricotta on top",       qty: 1,    unit: "oz",   grams: 28, item: "burrata or ricotta", note: "portion per container",          cal: 90,  protein: 6, carbs: 1,  fat: 7,  fiber: 0 },
+      { label: "1/4 cup white beans mixed in",          qty: 0.25, unit: "cup",  grams: 45, item: "white beans",       note: "stir into batch after cooking", cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
+      { label: "1 oz shredded parmesan on top",         qty: 1,    unit: "oz",   grams: 28, item: "parmesan",          note: "portion per container",          cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
     ],
   },
   {
@@ -231,10 +232,10 @@ const RECIPES = [
     method: ["Add all sauce ingredients and chicken to slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Remove chicken. Blend sauce smooth with immersion blender directly in cooker.","Shred or slice chicken and return to sauce. Stir to coat.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "The immersion blender is non-negotiable — blending the roasted peppers into the tomato base is what makes this sauce. Add heavy cream at serving only, not during freezing, to prevent separation.",
     levers: [
-      { label: "2 tbsp heavy cream at serving",       qty: 30, unit: "g", item: "heavy cream",          note: "portion per container", cal: 100, protein: 0, carbs: 1,  fat: 10, fiber: 0 },
-      { label: "1 oz fresh mozzarella or burrata",     qty: 28, unit: "g", item: "mozzarella or burrata", note: "portion per container", cal: 80,  protein: 6, carbs: 1,  fat: 6,  fiber: 0 },
-      { label: "1 tbsp olive oil drizzle at serving",  qty: 14, unit: "g", item: "olive oil",            note: "portion per container", cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
-      { label: "1 oz shredded parmesan on top",        qty: 28, unit: "g", item: "parmesan",             note: "portion per container", cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
+      { label: "2 tbsp heavy cream at serving",       qty: 2, unit: "tbsp", grams: 30, item: "heavy cream",          note: "portion per container", cal: 100, protein: 0, carbs: 1,  fat: 10, fiber: 0 },
+      { label: "1 oz fresh mozzarella or burrata",     qty: 1, unit: "oz",   grams: 28, item: "mozzarella or burrata", note: "portion per container", cal: 80,  protein: 6, carbs: 1,  fat: 6,  fiber: 0 },
+      { label: "1 tbsp olive oil drizzle at serving",  qty: 1, unit: "tbsp", grams: 14, item: "olive oil",            note: "portion per container", cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1 oz shredded parmesan on top",        qty: 1, unit: "oz",   grams: 28, item: "parmesan",             note: "portion per container", cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
     ],
   },
   {
@@ -261,10 +262,10 @@ const RECIPES = [
     ],
     tip: "Chipotles in adobo vary in heat by brand — La Costeña runs hotter than San Marcos. Start with 3 peppers the first batch and adjust up. The adobo sauce itself carries a lot of the flavor, so don't skip it. Freezes exceptionally well.",
     levers: [
-      { label: "1/2 avocado at serving",      qty: 75, unit: "g", item: "avocado",              note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
-      { label: "2 tbsp full-fat sour cream",   qty: 30, unit: "g", item: "sour cream",           note: "portion per container",                       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
-      { label: "1 oz Mexican cheese blend",     qty: 28, unit: "g", item: "Mexican cheese blend", note: "portion per container",                       cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
-      { label: "1 tbsp olive oil drizzle",      qty: 14, unit: "g", item: "olive oil",            note: "portion per container",                       cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1/2 avocado at serving",      qty: 0.5, unit: "avocado", grams: 75, item: "avocado",              note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
+      { label: "2 tbsp full-fat sour cream",   qty: 2,   unit: "tbsp",    grams: 30, item: "sour cream",           note: "portion per container",                       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
+      { label: "1 oz Mexican cheese blend",     qty: 1,   unit: "oz",      grams: 28, item: "Mexican cheese blend", note: "portion per container",                       cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
+      { label: "1 tbsp olive oil drizzle",      qty: 1,   unit: "tbsp",    grams: 14, item: "olive oil",            note: "portion per container",                       cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
     ],
   },
   {
@@ -292,10 +293,10 @@ const RECIPES = [
     ],
     tip: "Lemon juice mellows significantly during slow cooking — don't be shy with it. The zest holds more flavor than the juice; adding fresh zest at serving is the easiest way to punch it back up. Lightest calorie base in the rotation.",
     levers: [
-      { label: "1 tbsp olive oil drizzle at serving", qty: 14, unit: "g", item: "olive oil",    note: "portion per container",               cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
-      { label: "1 oz feta cheese crumbled on top",    qty: 28, unit: "g", item: "feta cheese",  note: "crumble and portion per container",    cal: 75,  protein: 4, carbs: 1,  fat: 6,  fiber: 0 },
-      { label: "1/4 cup white beans mixed in",         qty: 45, unit: "g", item: "white beans",  note: "stir into batch after cooking",        cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
-      { label: "2 tbsp hummus at serving",              qty: 30, unit: "g", item: "hummus",       note: "portion per container",               cal: 70,  protein: 2, carbs: 6,  fat: 5,  fiber: 2 },
+      { label: "1 tbsp olive oil drizzle at serving", qty: 1,    unit: "tbsp", grams: 14, item: "olive oil",    note: "portion per container",               cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1 oz feta cheese crumbled on top",    qty: 1,    unit: "oz",   grams: 28, item: "feta cheese",  note: "crumble and portion per container",    cal: 75,  protein: 4, carbs: 1,  fat: 6,  fiber: 0 },
+      { label: "1/4 cup white beans mixed in",         qty: 0.25, unit: "cup",  grams: 45, item: "white beans",  note: "stir into batch after cooking",        cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
+      { label: "2 tbsp hummus at serving",              qty: 2,    unit: "tbsp", grams: 30, item: "hummus",       note: "portion per container",               cal: 70,  protein: 2, carbs: 6,  fat: 5,  fiber: 2 },
     ],
   },
   {
@@ -320,10 +321,10 @@ const RECIPES = [
     ],
     tip: "The cornstarch slurry at the end is what separates teriyaki from plain soy chicken — don't skip it. If you forget, reduce the cooking juices in a saucepan for 5 minutes after shredding. Glaze thickens further as it cools in containers.",
     levers: [
-      { label: "1 tbsp sesame seeds on top",           qty: 9,  unit: "g", item: "sesame seeds",  note: "sprinkle per container at packing",   cal: 50,  protein: 2, carbs: 2,  fat: 4,  fiber: 1 },
-      { label: "1/2 cup edamame mixed in",              qty: 75, unit: "g", item: "edamame",       note: "stir into batch after shredding",     cal: 95,  protein: 8, carbs: 7,  fat: 4,  fiber: 4 },
-      { label: "1 tbsp peanut butter in sauce",         qty: 16, unit: "g", item: "peanut butter", note: "whisk into sauce before cooking",     cal: 95, protein: 4, carbs: 3, fat: 8, fiber: 0.5 },
-      { label: "Extra 1 tbsp teriyaki drizzle",         qty: 18, unit: "g", item: "teriyaki sauce", note: "portion per container",               cal: 35,  protein: 1, carbs: 7,  fat: 0,  fiber: 0 },
+      { label: "1 tbsp sesame seeds on top",           qty: 1,   unit: "tbsp", grams: 9,  item: "sesame seeds",  note: "sprinkle per container at packing",   cal: 50,  protein: 2, carbs: 2,  fat: 4,  fiber: 1 },
+      { label: "1/2 cup edamame mixed in",              qty: 0.5, unit: "cup",  grams: 75, item: "edamame",       note: "stir into batch after shredding",     cal: 95,  protein: 8, carbs: 7,  fat: 4,  fiber: 4 },
+      { label: "1 tbsp peanut butter in sauce",         qty: 1,   unit: "tbsp", grams: 16, item: "peanut butter", note: "whisk into sauce before cooking",     cal: 95, protein: 4, carbs: 3, fat: 8, fiber: 0.5 },
+      { label: "Extra 1 tbsp teriyaki drizzle",         qty: 1,   unit: "tbsp", grams: 18, item: "teriyaki sauce", note: "portion per container",               cal: 35,  protein: 1, carbs: 7,  fat: 0,  fiber: 0 },
     ],
   },
   {
@@ -349,10 +350,10 @@ const RECIPES = [
     ],
     tip: "Full-fat coconut milk is non-negotiable — light coconut milk splits and turns grainy when frozen. Red curry paste varies wildly by brand; Maesri is hotter than Mae Ploy. Start with 2 tbsp if you're heat-sensitive. Highest calorie base in the rotation — built for high intake days.",
     levers: [
-      { label: "2 tbsp coconut milk drizzle",   qty: 30, unit: "g", item: "coconut milk",     note: "portion per container",          cal: 60,  protein: 0, carbs: 2,  fat: 6,  fiber: 0 },
-      { label: "1 oz roasted cashews on top",    qty: 28, unit: "g", item: "roasted cashews",  note: "portion per container, add at serving", cal: 160, protein: 5, carbs: 9,  fat: 13, fiber: 1 },
-      { label: "1/4 cup chickpeas mixed in",      qty: 41, unit: "g", item: "chickpeas",        note: "stir into batch after shredding", cal: 90,  protein: 5, carbs: 15, fat: 1,  fiber: 4 },
-      { label: "Extra 1 tsp curry paste",         qty: 6,  unit: "g", item: "curry paste",      note: "stir into batch",                cal: 10,  protein: 0, carbs: 2,  fat: 0,  fiber: 0 },
+      { label: "2 tbsp coconut milk drizzle",   qty: 2,    unit: "tbsp", grams: 30, item: "coconut milk",     note: "portion per container",          cal: 60,  protein: 0, carbs: 2,  fat: 6,  fiber: 0 },
+      { label: "1 oz roasted cashews on top",    qty: 1,    unit: "oz",   grams: 28, item: "roasted cashews",  note: "portion per container, add at serving", cal: 160, protein: 5, carbs: 9,  fat: 13, fiber: 1 },
+      { label: "1/4 cup chickpeas mixed in",      qty: 0.25, unit: "cup",  grams: 41, item: "chickpeas",        note: "stir into batch after shredding", cal: 90,  protein: 5, carbs: 15, fat: 1,  fiber: 4 },
+      { label: "Extra 1 tsp curry paste",         qty: 1,    unit: "tsp",  grams: 6,  item: "curry paste",      note: "stir into batch",                cal: 10,  protein: 0, carbs: 2,  fat: 0,  fiber: 0 },
     ],
   },
   {
@@ -378,10 +379,10 @@ const RECIPES = [
     ],
     tip: "Use a quality Dijon — generic yellow mustard tastes flat after slow cooking. The honey caramelizes slightly and the sauce thickens on its own without cornstarch. If it looks thin after cooking, remove the lid for the last 30 minutes. Pairs exceptionally well with Brussels sprouts.",
     levers: [
-      { label: "1 tbsp extra honey mustard at serving", qty: 17, unit: "g", item: "honey mustard",  note: "portion per container",                       cal: 55,  protein: 1, carbs: 6,  fat: 3,  fiber: 0 },
-      { label: "1 oz shredded cheddar on top",           qty: 28, unit: "g", item: "shredded cheddar", note: "portion per container",                     cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
-      { label: "1/2 avocado at serving",                  qty: 75, unit: "g", item: "avocado",        note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
-      { label: "1 tbsp bacon bits on top",                qty: 7,  unit: "g", item: "real bacon bits", note: "portion per container",                     cal: 40,  protein: 3, carbs: 0,  fat: 3,  fiber: 0 },
+      { label: "1 tbsp extra honey mustard at serving", qty: 1,   unit: "tbsp",    grams: 17, item: "honey mustard",  note: "portion per container",                       cal: 55,  protein: 1, carbs: 6,  fat: 3,  fiber: 0 },
+      { label: "1 oz shredded cheddar on top",           qty: 1,   unit: "oz",      grams: 28, item: "shredded cheddar", note: "portion per container",                     cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
+      { label: "1/2 avocado at serving",                  qty: 0.5, unit: "avocado", grams: 75, item: "avocado",        note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
+      { label: "1 tbsp bacon bits on top",                qty: 1,   unit: "tbsp",    grams: 7,  item: "real bacon bits", note: "portion per container",                     cal: 40,  protein: 3, carbs: 0,  fat: 3,  fiber: 0 },
     ],
   },
   {
@@ -391,10 +392,10 @@ const RECIPES = [
     method: ["Rub dry seasonings over all chicken thighs.","Add chicken and broth to slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred chicken with two forks.","Toss shredded chicken in Frank's Buffalo sauce AFTER shredding — never during cooking.","Portion over rice and veggies. Cool then freeze."],
     tip: "Frank's Buffalo is nearly calorie-free — basically vinegar and cayenne. Best flavor-to-calorie ratio in the rotation. Lowest calorie base overall, ideal for rest days. Never cook the buffalo sauce — add it after shredding.",
     levers: [
-      { label: "1 tbsp light ranch drizzle", qty: 15, unit: "g", item: "light ranch",         note: "portion per container",                       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
-      { label: "1 oz blue cheese crumbles",   qty: 28, unit: "g", item: "blue cheese crumbles", note: "portion per container",                      cal: 100, protein: 6, carbs: 1, fat: 8,  fiber: 0 },
-      { label: "1/2 avocado at serving",      qty: 75, unit: "g", item: "avocado",             note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
-      { label: "1 tbsp full-fat ranch",       qty: 15, unit: "g", item: "full-fat ranch",      note: "portion per container",                       cal: 70,  protein: 0, carbs: 1, fat: 7,  fiber: 0 },
+      { label: "1 tbsp light ranch drizzle", qty: 1,   unit: "tbsp",    grams: 15, item: "light ranch",         note: "portion per container",                       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
+      { label: "1 oz blue cheese crumbles",   qty: 1,   unit: "oz",      grams: 28, item: "blue cheese crumbles", note: "portion per container",                      cal: 100, protein: 6, carbs: 1, fat: 8,  fiber: 0 },
+      { label: "1/2 avocado at serving",      qty: 0.5, unit: "avocado", grams: 75, item: "avocado",             note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
+      { label: "1 tbsp full-fat ranch",       qty: 1,   unit: "tbsp",    grams: 15, item: "full-fat ranch",      note: "portion per container",                       cal: 70,  protein: 0, carbs: 1, fat: 7,  fiber: 0 },
     ],
   },
 ];
@@ -469,13 +470,25 @@ function fmtNum(n) {
   return (Math.round(n * 100) / 100).toString();
 }
 
-// Builds a gram quantity scaled to the current serving count — everything weighable on a kitchen scale.
-function formatQty(gramsPerServing, servings) {
+// Builds the original-unit batch quantity (what you'd buy/measure), scaled to servings.
+function formatOriginalQty(qtyPerServing, unit, servings) {
+  const total = qtyPerServing * servings;
+  if (unit === "tbsp" && total >= 16) return `${fmtNum(total / 16)} cup${total / 16 !== 1 ? "s" : ""}`;
+  if (unit === "tsp"  && total >= 3)  return `${fmtNum(total / 3)} tbsp`;
+  const plural = total !== 1 ? "s" : "";
+  if (unit === "avocado")  return `${fmtNum(total)} avocado${plural}`;
+  if (unit === "tortilla") return `${fmtNum(total)} tortilla${plural}`;
+  if (unit === "cup")      return `${fmtNum(total)} cup${plural}`;
+  return `${fmtNum(total)} ${unit}`;
+}
+
+// Gram add-on for weighing on a kitchen scale when adding to the slow cooker or portioning containers.
+function formatGrams(gramsPerServing, servings) {
   return `${fmtNum(gramsPerServing * servings)}g`;
 }
 
 function leverBatchText(lv, servings) {
-  return `${formatQty(lv.qty, servings)} ${lv.item} — ${lv.note}`;
+  return `${formatOriginalQty(lv.qty, lv.unit, servings)} (${formatGrams(lv.grams, servings)}) ${lv.item} — ${lv.note}`;
 }
 
 function getLunchMacros(rec) {
@@ -687,13 +700,13 @@ function renderDetail(rice, recipe) {
   const lunchBudgetFib  = clamp(state.targetFiber   - state.morning.fiber);
 
   const breakdownRows = [
-    { ...CHICKEN,      label: "Chicken thigh (255g raw)" },
-    { ...rice,         label: `White rice (${rice.label})` },
-    { ...activeVeggie, label: `${activeVeggie.label} (${activeVeggie.grams}g)` },
+    { ...CHICKEN,      label: "9 oz chicken thigh (255g raw)" },
+    { ...rice,         label: `White rice — ${rice.label}` },
+    { ...activeVeggie, label: `${activeVeggie.label} (1/2 cup, ${activeVeggie.grams}g)` },
     { ...recipe.sauce, label: recipe.name + " sauce" },
     ...(state.cuties     ? [{ ...CUTIES, label: "2 Cuties" }] : []),
     ...(state.riceCrispy ? [{ ...TREAT,  label: "Rice Crispy Treat" }] : []),
-    ...recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => ({ ...lv, label: `+ ${lv.label} (${lv.qty}g)` })),
+    ...recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => ({ ...lv, label: `+ ${lv.label} (${lv.grams}g)` })),
   ];
 
   function fiberBar(val, target, color) {
@@ -710,7 +723,7 @@ function renderDetail(rice, recipe) {
       <span class="recipe-head-emoji">${recipe.emoji}</span>
       <div style="flex:1">
         <div class="recipe-head-name">${recipe.name}</div>
-        <div class="recipe-head-sub">${recipe.tag} · ${fmtNum(state.servings * RAW_G_PER_SERVING)}g batch · ${state.servings} servings · Freezer-ready</div>
+        <div class="recipe-head-sub">${recipe.tag} · ${fmtNum(state.servings * RAW_OZ_PER_SERVING / 16)} lb (${fmtNum(state.servings * RAW_G_PER_SERVING)}g) batch · ${state.servings} servings · Freezer-ready</div>
       </div>
       <button class="batch-toggle-btn" style="${state.thisWeeksBatch === recipe.id ? 'background:#10B98120;color:#10B981;border-color:#10B98140' : 'background:transparent;color:#6B7280'}" data-set-batch="${recipe.id}">
         ${state.thisWeeksBatch === recipe.id ? '✓ This Week' : '📌 Set as This Week'}
@@ -759,7 +772,7 @@ function renderDetail(rice, recipe) {
 
       <!-- Veggie -->
       <div class="mb-14">
-        <div class="section-label">Vegetable (${activeVeggie.grams}g)</div>
+        <div class="section-label">Vegetable (1/2 cup, ${activeVeggie.grams}g)</div>
         <div style="background:#0D1117;border-radius:8px;padding:10px 12px;border:1px solid #1F2937">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
             <span style="font-size:18px">${activeVeggie.emoji}</span>
@@ -767,7 +780,7 @@ function renderDetail(rice, recipe) {
             ${!isOverridden ? `<span class="tag" style="color:#10B981;background:#10B98120">Recommended</span>` : `<span class="tag" style="color:#FF6B35;background:#FF6B3520">Overridden</span>`}
             <span style="font-size:10px;color:#6B7280;margin-left:auto">${activeVeggie.cal} cal · ${activeVeggie.protein}g prot · ${activeVeggie.fiber}g fiber</span>
           </div>
-          <div style="font-size:10px;color:#10B981;padding:4px 6px;background:#10B98110;border-radius:4px;border-left:2px solid #10B981;margin-bottom:8px">📦 ${formatQty(activeVeggie.grams, state.servings)} ${activeVeggie.label.toLowerCase()} for full batch (${activeVeggie.grams}g × ${state.servings} servings)</div>
+          <div style="font-size:10px;color:#10B981;padding:4px 6px;background:#10B98110;border-radius:4px;border-left:2px solid #10B981;margin-bottom:8px">📦 ${formatOriginalQty(0.5, "cup", state.servings)} (${formatGrams(activeVeggie.grams, state.servings)}) ${activeVeggie.label.toLowerCase()} for full batch (½ cup × ${state.servings} servings)</div>
           <div style="display:flex;gap:5px;flex-wrap:wrap">
             ${VEGGIES.map(v => `
               <button class="pill${activeVeggieId === v.id ? ' active-orange' : ''}" data-veggie-override="${v.id}">
@@ -801,9 +814,9 @@ function renderDetail(rice, recipe) {
       <div class="mb-14">
         <div class="section-label">📋 Shopping List for This Batch (${state.servings} servings)</div>
         <div class="shopping-list">
-          <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${formatQty(RAW_G_PER_SERVING, state.servings)} raw boneless skinless chicken thighs</span></div>
-          <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${formatQty(rice.grams, state.servings)} cooked white rice (cook fresh to yield this amount)</span></div>
-          <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${formatQty(activeVeggie.grams, state.servings)} ${activeVeggie.label.toLowerCase()}</span></div>
+          <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${fmtNum(state.servings * RAW_OZ_PER_SERVING / 16)} lbs (${formatGrams(RAW_G_PER_SERVING, state.servings)}) raw boneless skinless chicken thighs</span></div>
+          <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${formatOriginalQty(state.riceVal, "cup", state.servings)} (${formatGrams(rice.grams, state.servings)}) cooked white rice (cook fresh to yield this amount)</span></div>
+          <div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${formatOriginalQty(0.5, "cup", state.servings)} (${formatGrams(activeVeggie.grams, state.servings)}) ${activeVeggie.label.toLowerCase()}</span></div>
           ${state.cuties ? `<div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${state.servings * 2} Cuties (mandarins)</span></div>` : ""}
           ${state.riceCrispy ? `<div class="shopping-item"><span style="color:${recipe.color};font-size:14px">·</span><span>${state.servings} Rice Crispy Treats</span></div>` : ""}
           ${recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => `
@@ -871,7 +884,7 @@ function renderDetail(rice, recipe) {
             ${recipe.ingredients.map((ing, i) => `
               <div class="ingr-item">
                 <span style="color:${recipe.color};font-size:14px;flex-shrink:0">·</span>
-                <span>${i === 0 ? `${formatQty(RAW_G_PER_SERVING, state.servings)} boneless skinless chicken thighs` : ing}</span>
+                <span>${i === 0 ? `${fmtNum(state.servings * RAW_OZ_PER_SERVING / 16)} lbs (${formatGrams(RAW_G_PER_SERVING, state.servings)}) boneless skinless chicken thighs` : ing}</span>
               </div>`).join("")}
             <div class="section-label" style="margin-top:14px;margin-bottom:8px">Method</div>
             ${recipe.method.map((step, i) => `
