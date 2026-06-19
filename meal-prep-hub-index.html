@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍗 Meal Prep Hub</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0A0E1A; font-family: 'Inter', system-ui, sans-serif; font-size: 13px; color: #F9FAFB; }
+    button { font-family: inherit; border: none; background: none; cursor: pointer; }
+
+    #root { min-height: 100vh; }
+
+    /* Header */
+    .header { background: #0D1117; border-bottom: 1px solid #1F2937; padding: 10px 14px; position: sticky; top: 0; z-index: 99; }
+    .logo { font-size: 16px; font-weight: 800; color: #FF6B35; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .targets-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .target-field { display: flex; flex-direction: column; gap: 2px; }
+    .target-label { font-size: 9px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; }
+    .target-input { background: #1F2937; border: 1px solid #374151; border-radius: 6px; color: #F9FAFB; font-size: 13px; font-weight: 700; padding: 4px 8px; width: 80px; outline: none; font-family: inherit; }
+    .target-input:focus { border-color: #FF6B35; }
+
+    /* Controls */
+    .controls { background: #0D1117; border-bottom: 1px solid #1F2937; padding: 10px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .control-label { font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+    .pills-row { display: flex; gap: 5px; flex-wrap: wrap; }
+    .pill { padding: 3px 9px; border-radius: 14px; font-size: 11px; font-weight: 400; border: 1px solid #1F2937; color: #6B7280; transition: all 0.15s; }
+    .pill.active-orange { border-color: #FF6B35; background: #FF6B3520; color: #FF6B35; font-weight: 600; }
+    .pill.active-green { border-color: #10B981; background: #10B98120; color: #10B981; font-weight: 600; }
+
+    /* Budget bar */
+    .budget { display: flex; gap: 6px; padding: 10px 14px; background: #0D1117; border-bottom: 1px solid #1F2937; }
+    .budget-tile { flex: 1; background: #111827; border-radius: 8px; padding: 8px 9px; border-top: 2px solid #9CA3AF; }
+    .budget-label { font-size: 9px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; }
+    .budget-num { font-size: 17px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+    .budget-sub { font-size: 10px; color: #6B7280; margin-top: 2px; }
+    .budget-sep { display: flex; align-items: center; color: #374151; font-size: 18px; font-weight: 300; }
+
+    /* Phase callout */
+    .phase-callout { margin: 10px 14px 0; padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; gap: 8px; }
+    .phase-callout-label { font-size: 11px; font-weight: 700; }
+    .phase-callout-sub { font-size: 11px; color: #6B7280; }
+
+    /* Recipe grid */
+    .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; padding: 14px; }
+    .recipe-card { background: #111827; border: 1px solid #1F2937; border-radius: 10px; padding: 12px; cursor: pointer; border-top: 3px solid #ccc; transition: transform 0.1s; }
+    .recipe-card:hover { transform: translateY(-1px); }
+    .recipe-emoji { font-size: 26px; margin-bottom: 6px; }
+    .recipe-name { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+    .recipe-tag { font-size: 10px; color: #6B7280; margin-bottom: 9px; }
+    .chip { display: inline-block; font-size: 10px; font-weight: 700; border-radius: 5px; padding: 2px 6px; margin-right: 4px; margin-bottom: 3px; }
+    .tag { font-size: 10px; font-weight: 700; border-radius: 4px; padding: 2px 6px; letter-spacing: 0.3px; }
+    .card-open { margin-top: 9px; font-size: 11px; color: #4B5563; display: flex; justify-content: flex-end; }
+
+    /* Recipe detail */
+    .recipe-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #1F2937; background: #0D1117; }
+    .back-btn { background: none; border: 1px solid #1F2937; color: #6B7280; border-radius: 7px; padding: 4px 10px; cursor: pointer; font-size: 11px; }
+    .recipe-head-emoji { font-size: 22px; }
+    .recipe-head-name { font-weight: 700; font-size: 15px; }
+    .recipe-head-sub { font-size: 10px; color: #6B7280; }
+
+    .detail-body { padding: 14px; }
+
+    /* Macro tiles */
+    .section-label { font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .macro-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 12px; }
+    .macro-tile { text-align: center; background: #0D1117; border-radius: 7px; padding: 8px 4px; border-bottom: 2px solid #ccc; }
+    .macro-num { font-size: 19px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; }
+    .macro-lbl { font-size: 9px; color: #6B7280; margin-top: 3px; }
+    .macro-goal { font-size: 9px; color: #4B5563; margin-top: 1px; }
+    .fiber-bar-bg { background: #1F2937; border-radius: 3px; height: 5px; overflow: hidden; margin-top: 3px; }
+    .fiber-bar-fill { height: 100%; transition: width 0.3s; }
+
+    /* Levers */
+    .lever-row { display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; border-radius: 8px; cursor: pointer; border: 1px solid #1F2937; background: #0D1117; margin-bottom: 5px; transition: all 0.15s; }
+    .lever-row.active { border-color: #FF6B35; background: #FF6B3512; }
+    .checkbox { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; border: 2px solid #374151; background: transparent; display: flex; align-items: center; justify-content: center; }
+    .checkbox.active { border-color: #FF6B35; background: #FF6B35; }
+    .check-mark { color: #000; font-size: 9px; font-weight: 900; }
+    .lever-label { font-size: 12px; font-weight: 600; color: #9CA3AF; }
+    .lever-label.active { color: #F9FAFB; }
+    .lever-macros { font-size: 10px; color: #6B7280; margin-top: 1px; }
+
+    /* Breakdown table */
+    .breakdown-card { background: #111827; border-radius: 8px; padding: 2px 12px; }
+    .breakdown-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #1F2937; font-size: 12px; }
+    .breakdown-row.total { font-weight: 800; border-bottom: none; padding-top: 8px; }
+    .bd-label { color: #9CA3AF; flex: 1; }
+    .bd-cal { color: #FF6B35; width: 50px; text-align: right; }
+    .bd-prot { color: #60A5FA; width: 50px; text-align: right; }
+    .bd-fib { color: #10B981; width: 40px; text-align: right; }
+
+    /* Dinner headroom */
+    .dinner-card { background: #0D1117; border: 1px solid #1F2937; border-radius: 10px; padding: 12px; margin-top: 12px; }
+    .dinner-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 8px; }
+    .dinner-tile { text-align: center; background: #111827; border-radius: 8px; padding: 8px 6px; }
+    .dinner-num { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; }
+    .dinner-lbl { font-size: 9px; color: #6B7280; margin-top: 3px; }
+    .dinner-over { font-size: 9px; color: #EF4444; margin-top: 1px; }
+    .dinner-footer { font-size: 10px; color: #374151; border-top: 1px solid #1F2937; padding-top: 7px; }
+
+    /* Recipe toggle */
+    .recipe-toggle { width: 100%; padding: 9px 12px; background: #111827; border: 1px solid #1F2937; border-radius: 8px; color: #9CA3AF; cursor: pointer; font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; }
+    .recipe-body { background: #111827; border: 1px solid #1F2937; border-top: none; border-radius: 0 0 8px 8px; padding: 12px; }
+    .ingr-item { font-size: 12px; color: #D1D5DB; padding: 4px 0; border-bottom: 1px solid #1F2937; display: flex; gap: 7px; align-items: center; }
+    .step-row { display: flex; gap: 9px; margin-bottom: 9px; align-items: flex-start; }
+    .step-num { width: 20px; height: 20px; border-radius: 50%; color: #000; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; flex-shrink: 0; margin-top: 2px; }
+    .step-text { font-size: 12px; color: #D1D5DB; line-height: 1.5; padding-top: 2px; }
+    .tip-box { margin-top: 10px; padding: 9px 11px; background: #0D1117; border-radius: 8px; font-size: 11px; color: #9CA3AF; line-height: 1.5; }
+
+    .flex-row { display: flex; gap: 20px; flex-wrap: wrap; }
+    .mt-8 { margin-top: 8px; }
+    .mt-14 { margin-top: 14px; }
+    .mb-14 { margin-bottom: 14px; }
+    .mb-12 { margin-bottom: 12px; }
+    .mb-8 { margin-bottom: 8px; }
+    .mb-3 { margin-bottom: 3px; }
+    .mb-6 { margin-bottom: 6px; }
+
+    .footer { padding: 10px 14px 20px; font-size: 10px; color: #374151; text-align: center; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+// ═══════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════
+
+const MORNING = { cal: 803, protein: 74, carbs: 85, fat: 22, fiber: 5 };
+
+const RICE = [
+  { value: 1,   label: "185g (1 cup)",    cal: 200, protein: 4,  carbs: 44,  fat: 0, fiber: 1 },
+  { value: 1.5, label: "280g (1.5 cups)", cal: 300, protein: 6,  carbs: 66,  fat: 0, fiber: 1 },
+  { value: 2,   label: "370g (2 cups)",   cal: 400, protein: 8,  carbs: 88,  fat: 0, fiber: 1 },
+  { value: 2.5, label: "465g (2.5 cups)", cal: 500, protein: 10, carbs: 110, fat: 0, fiber: 2 },
+];
+
+const VEGGIES = [
+  { id: "peppers",  label: "Peppers & Onions", emoji: "🫑", cal: 50, protein: 2, carbs: 10, fat: 0, fiber: 2 },
+  { id: "broccoli", label: "Broccoli",          emoji: "🥦", cal: 55, protein: 4, carbs: 11, fat: 0, fiber: 5 },
+  { id: "gbeans",   label: "Green Beans",       emoji: "🫘", cal: 44, protein: 2, carbs: 10, fat: 0, fiber: 4 },
+  { id: "zucchini", label: "Zucchini",          emoji: "🌿", cal: 20, protein: 1, carbs:  4, fat: 0, fiber: 1 },
+  { id: "brussels", label: "Brussels Sprouts",  emoji: "🥬", cal: 56, protein: 4, carbs: 11, fat: 0, fiber: 4 },
+  { id: "corn",     label: "Corn",              emoji: "🌽", cal: 66, protein: 2, carbs: 15, fat: 1, fiber: 2 },
+  { id: "mixed",    label: "Mixed Veg",         emoji: "🥗", cal: 70, protein: 3, carbs: 14, fat: 0, fiber: 4 },
+  { id: "none",     label: "No Veggies",        emoji: "✕",  cal:  0, protein: 0, carbs:  0, fat: 0, fiber: 0 },
+];
+
+const CHICKEN = { cal: 338, protein: 43, carbs: 0,  fat: 16, fiber: 0 };
+const CUTIES  = { cal: 70,  protein: 1,  carbs: 18, fat: 0,  fiber: 3 };
+const TREAT   = { cal: 90,  protein: 1,  carbs: 17, fat: 2,  fiber: 0 };
+
+const RECIPES = [
+  {
+    id: "soy", name: "Soy Garlic Sesame", tag: "Asian-Inspired", emoji: "🍜", color: "#4ECDC4", veggie: "broccoli",
+    sauce: { cal: 50, protein: 1, carbs: 6, fat: 2, fiber: 0 },
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","1/3 cup low-sodium soy sauce","6 garlic cloves, minced (or 2 tsp garlic powder)","1 tbsp fresh ginger (or 1 tsp ground ginger)","2 tbsp rice vinegar","1 tbsp honey","1/4 cup chicken broth","1/2 tsp sesame oil per serving — add AFTER cooking"],
+    method: ["Combine soy sauce, garlic, ginger, rice vinegar, honey, and broth.","Pour over chicken thighs in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred or slice chicken, toss in cooking juices.","Add sesame oil AFTER shredding — not during cooking, it turns bitter.","Portion over rice and veggies. Cool to room temp, then freeze."],
+    tip: "Track raw chicken weight before loading the cooker. Cooked weight shrinks ~25%. Sesame oil added during cooking turns bitter — always add after.",
+    levers: [
+      { label: "1 tbsp peanut butter in sauce",    batch: "½ cup (8 tbsp) peanut butter — add to sauce before cooking", cal: 95,  protein: 4, carbs: 3, fat: 8,  fiber: 0.5 },
+      { label: "1 tbsp crushed peanuts at serving", batch: "½ cup crushed peanuts — portion 1 tbsp per container",       cal: 50,  protein: 2, carbs: 2, fat: 4,  fiber: 0.5 },
+      { label: "Extra 1 tsp sesame oil drizzle",    batch: "8 tsp sesame oil — portion per container at packing",        cal: 40,  protein: 0, carbs: 0, fat: 5,  fiber: 0   },
+      { label: "1/2 cup edamame mixed in",           batch: "4 cups (32 oz) edamame — stir into batch after shredding",  cal: 95,  protein: 8, carbs: 7, fat: 4,  fiber: 4   },
+    ],
+  },
+  {
+    id: "bbq", name: "BBQ Smoke", tag: "Southern-Style", emoji: "🔥", color: "#F97316", veggie: "gbeans",
+    sauce: { cal: 55, protein: 0, carbs: 13, fat: 0, fiber: 0 },
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","1/2 cup BBQ sauce (measure carefully — brands vary wildly)","1 tbsp smoked paprika","1 tsp garlic powder","1 tsp onion powder","1 tsp black pepper","1/4 cup apple cider vinegar"],
+    method: ["Mix BBQ sauce, paprika, garlic powder, onion powder, pepper, and vinegar.","Pour sauce over chicken in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Pull apart chicken with two forks. Toss in thickened cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
+    tip: "BBQ sauce is your main calorie trap — 2 tbsp can hit 80–90 cal and most people pour more. Measure it. Choose a brand under 12g sugar per 2 tbsp. Apple cider vinegar keeps the pull moist without adding calories.",
+    levers: [
+      { label: "Extra 1 tbsp BBQ sauce at serving", batch: "½ cup (8 tbsp) BBQ sauce — portion per container",          cal: 30,  protein: 0, carbs: 7, fat: 0,  fiber: 0 },
+      { label: "1 oz shredded cheddar on top",       batch: "8 oz (1 bag) shredded cheddar — portion per container",   cal: 110, protein: 7, carbs: 0, fat: 9,  fiber: 0 },
+      { label: "1 tbsp full-fat sour cream",          batch: "½ cup (8 tbsp) sour cream — portion per container",       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
+      { label: "1/2 avocado at serving",              batch: "4 avocados — slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
+    ],
+  },
+  {
+    id: "texmex", name: "Tex-Mex Salsa", tag: "Southwest-Style", emoji: "🌮", color: "#EF4444", veggie: "peppers",
+    sauce: { cal: 20, protein: 1, carbs: 4, fat: 0, fiber: 1 },
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","2 tsp cumin","2 tsp chili powder","1 tsp garlic powder","1 tsp smoked paprika","1 tsp oregano","1/2 cup salsa or diced tomatoes with green chiles","Juice of 1 lime"],
+    method: ["Rub dry seasonings over all chicken thighs.","Place in slow cooker. Pour salsa and lime juice over top.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred chicken and toss in cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
+    tip: "Leanest base in the rotation — use on rest days when calories run lower. Add jalapeños or hot sauce for heat at zero calorie cost. Tomato-salsa base freezes exceptionally well.",
+    levers: [
+      { label: "1/2 avocado at serving",         batch: "4 avocados — slice fresh at each meal, don't pre-portion",  cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
+      { label: "2 tbsp full-fat sour cream",      batch: "1 cup (16 tbsp) sour cream — portion per container",       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
+      { label: "1 oz Mexican cheese blend",        batch: "8 oz (1 bag) Mexican cheese — portion per container",      cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
+      { label: "Flour tortilla wrap (swap rice)",  batch: "8 flour tortillas — store separately, wrap at each meal",  cal: 200, protein: 6, carbs: 36, fat: 3,  fiber: 1 },
+    ],
+  },
+  {
+    id: "arrabiata", name: "Arrabbiata", tag: "Spicy Italian", emoji: "🍅", color: "#DC2626", veggie: "brussels",
+    sauce: { cal: 55, protein: 2, carbs: 9, fat: 2, fiber: 2 },
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","2 cans (28 oz each) crushed tomatoes","8 garlic cloves, minced","2–3 tsp red pepper flakes — adjust to heat preference","1 tbsp olive oil","1 tsp sugar (balances acidity)","1 tsp Italian seasoning","Fresh basil if available — add after cooking"],
+    method: ["Add crushed tomatoes, garlic, olive oil, sugar, and seasonings to slow cooker.","Nestle chicken thighs into the sauce.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred or slice chicken, stir back into sauce.","Optional: blend smooth with immersion blender.","Portion over rice and veggies. Cool then freeze."],
+    tip: "Tomato-based sauces are the most freezer-stable — this reheats the best of all six. Red pepper flakes lose heat in the slow cooker, so add more at serving if needed.",
+    levers: [
+      { label: "1 tbsp olive oil drizzle at serving", batch: "½ cup (8 tbsp) olive oil — portion per container",          cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1 oz burrata or ricotta on top",       batch: "8 oz burrata or ricotta — portion per container",          cal: 90,  protein: 6, carbs: 1,  fat: 7,  fiber: 0 },
+      { label: "1/4 cup white beans mixed in",          batch: "2 cups (1 can) white beans — stir into batch after cooking", cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
+      { label: "1 oz shredded parmesan on top",         batch: "8 oz parmesan — portion per container",                    cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
+    ],
+  },
+  {
+    id: "rrp", name: "Roasted Red Pepper", tag: "Smoky Italian", emoji: "🫑", color: "#EA580C", veggie: "mixed",
+    sauce: { cal: 70, protein: 2, carbs: 12, fat: 2, fiber: 2 },
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","2 jars (12 oz each) roasted red peppers, drained","1 can (28 oz) crushed tomatoes","6 garlic cloves, minced","1 small onion, diced","1 tsp smoked paprika","1 tsp Italian seasoning","1 tbsp olive oil"],
+    method: ["Add all sauce ingredients and chicken to slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Remove chicken. Blend sauce smooth with immersion blender directly in cooker.","Shred or slice chicken and return to sauce. Stir to coat.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
+    tip: "The immersion blender is non-negotiable — blending the roasted peppers into the tomato base is what makes this sauce. Add heavy cream at serving only, not during freezing, to prevent separation.",
+    levers: [
+      { label: "2 tbsp heavy cream at serving",       batch: "1 cup (16 tbsp) heavy cream — portion per container",     cal: 100, protein: 0, carbs: 1,  fat: 10, fiber: 0 },
+      { label: "1 oz fresh mozzarella or burrata",     batch: "8 oz mozzarella or burrata — portion per container",      cal: 80,  protein: 6, carbs: 1,  fat: 6,  fiber: 0 },
+      { label: "1 tbsp olive oil drizzle at serving",  batch: "½ cup (8 tbsp) olive oil — portion per container",        cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1 oz shredded parmesan on top",        batch: "8 oz parmesan — portion per container",                   cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
+    ],
+  },
+  {
+    id: "chipotle", name: "Chipotle Pepper", tag: "Smoky Mexican", emoji: "🫙", color: "#C2410C", veggie: "peppers",
+    sauce: { cal: 45, protein: 1, carbs: 6, fat: 2, fiber: 1 },
+    ingredients: [
+      "4.5 lbs boneless skinless chicken thighs",
+      "3–4 chipotle peppers in adobo sauce, minced (plus 2 tbsp adobo sauce)",
+      "4 garlic cloves, minced",
+      "1 tsp cumin",
+      "1 tsp smoked paprika",
+      "1 tsp oregano",
+      "1/2 tsp onion powder",
+      "Juice of 1 lime",
+      "1/4 cup chicken broth",
+    ],
+    method: [
+      "Mince chipotle peppers and combine with adobo sauce, garlic, cumin, paprika, oregano, onion powder, lime juice, and broth.",
+      "Pour sauce over chicken thighs in slow cooker.",
+      "Cook LOW 6–7 hrs or HIGH 3–4 hrs.",
+      "Shred chicken and toss well in the cooking juices — the sauce thickens and coats as it cooks.",
+      "Taste and adjust heat: add another minced chipotle if you want more smoke.",
+      "Portion over rice and veggies. Cool to room temp, then freeze.",
+    ],
+    tip: "Chipotles in adobo vary in heat by brand — La Costeña runs hotter than San Marcos. Start with 3 peppers the first batch and adjust up. The adobo sauce itself carries a lot of the flavor, so don't skip it. Freezes exceptionally well.",
+    levers: [
+      { label: "1/2 avocado at serving",      batch: "4 avocados — slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
+      { label: "2 tbsp full-fat sour cream",   batch: "1 cup (16 tbsp) sour cream — portion per container",      cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
+      { label: "1 oz Mexican cheese blend",     batch: "8 oz (1 bag) Mexican cheese — portion per container",     cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
+      { label: "1 tbsp olive oil drizzle",      batch: "½ cup (8 tbsp) olive oil — portion per container",        cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+    ],
+  },
+  {
+    id: "lemonherb", name: "Lemon Herb", tag: "Mediterranean", emoji: "🍋", color: "#84CC16", veggie: "zucchini",
+    sauce: { cal: 65, protein: 0, carbs: 2, fat: 6, fiber: 0 },
+    ingredients: [
+      "4.5 lbs boneless skinless chicken thighs",
+      "Juice of 3 lemons (about 6 tbsp)",
+      "Zest of 1 lemon",
+      "6 garlic cloves, minced",
+      "2 tbsp olive oil",
+      "2 tsp dried oregano",
+      "1 tsp dried thyme",
+      "1 tsp onion powder",
+      "1/2 tsp black pepper",
+      "1/4 cup chicken broth",
+    ],
+    method: [
+      "Whisk together lemon juice, zest, garlic, olive oil, oregano, thyme, onion powder, pepper, and broth.",
+      "Pour over chicken thighs in slow cooker.",
+      "Cook LOW 6–7 hrs or HIGH 3–4 hrs.",
+      "Shred or slice chicken and toss in cooking juices.",
+      "Taste and add extra lemon zest at serving if you want brighter flavor — zest loses punch during cooking.",
+      "Portion over rice and veggies. Cool to room temp, then freeze.",
+    ],
+    tip: "Lemon juice mellows significantly during slow cooking — don't be shy with it. The zest holds more flavor than the juice; adding fresh zest at serving is the easiest way to punch it back up. Lightest calorie base in the rotation.",
+    levers: [
+      { label: "1 tbsp olive oil drizzle at serving", batch: "½ cup (8 tbsp) olive oil — portion per container",           cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1 oz feta cheese crumbled on top",    batch: "8 oz block feta — crumble and portion per container",       cal: 75,  protein: 4, carbs: 1,  fat: 6,  fiber: 0 },
+      { label: "1/4 cup white beans mixed in",         batch: "2 cups (1 can) white beans — stir into batch after cooking", cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
+      { label: "2 tbsp hummus at serving",              batch: "1 cup (16 tbsp) hummus — portion per container",            cal: 70,  protein: 2, carbs: 6,  fat: 5,  fiber: 2 },
+    ],
+  },
+  {
+    id: "teriyaki", name: "Teriyaki", tag: "Japanese-Style", emoji: "🍱", color: "#06B6D4", veggie: "broccoli",
+    sauce: { cal: 65, protein: 1, carbs: 13, fat: 0, fiber: 0 },
+    ingredients: [
+      "4.5 lbs boneless skinless chicken thighs",
+      "1/3 cup low-sodium soy sauce",
+      "3 tbsp mirin (or 2 tbsp rice vinegar + 1 tsp sugar)",
+      "2 tbsp brown sugar or honey",
+      "4 garlic cloves, minced",
+      "1 tbsp fresh ginger, grated (or 1 tsp ground ginger)",
+      "1 tbsp cornstarch mixed with 2 tbsp cold water — stir in last 30 min to thicken",
+    ],
+    method: [
+      "Whisk together soy sauce, mirin, brown sugar, garlic, and ginger.",
+      "Pour over chicken thighs in slow cooker.",
+      "Cook LOW 6–7 hrs or HIGH 3–4 hrs.",
+      "In last 30 minutes, stir in cornstarch slurry to thicken the glaze.",
+      "Shred or slice chicken and toss in thickened glaze.",
+      "Portion over rice and veggies. Cool to room temp, then freeze.",
+    ],
+    tip: "The cornstarch slurry at the end is what separates teriyaki from plain soy chicken — don't skip it. If you forget, reduce the cooking juices in a saucepan for 5 minutes after shredding. Glaze thickens further as it cools in containers.",
+    levers: [
+      { label: "1 tbsp sesame seeds on top",           batch: "½ cup sesame seeds — sprinkle per container at packing",     cal: 50,  protein: 2, carbs: 2,  fat: 4,  fiber: 1 },
+      { label: "1/2 cup edamame mixed in",              batch: "4 cups (32 oz) edamame — stir into batch after shredding",   cal: 95,  protein: 8, carbs: 7,  fat: 4,  fiber: 4 },
+      { label: "1 tbsp peanut butter in sauce",         batch: "½ cup (8 tbsp) peanut butter — whisk into sauce before cooking", cal: 95, protein: 4, carbs: 3, fat: 8, fiber: 0.5 },
+      { label: "Extra 1 tbsp teriyaki drizzle",         batch: "½ cup (8 tbsp) teriyaki sauce — portion per container",      cal: 35,  protein: 1, carbs: 7,  fat: 0,  fiber: 0 },
+    ],
+  },
+  {
+    id: "coconutcurry", name: "Coconut Curry", tag: "Thai-Inspired", emoji: "🥥", color: "#F59E0B", veggie: "mixed",
+    sauce: { cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 1 },
+    ingredients: [
+      "4.5 lbs boneless skinless chicken thighs",
+      "1 can (13.5 oz) full-fat coconut milk",
+      "3 tbsp red curry paste (adjust to heat preference)",
+      "4 garlic cloves, minced",
+      "1 tbsp fresh ginger, grated",
+      "1 tbsp fish sauce (or 2 tsp soy sauce)",
+      "Juice of 1 lime",
+      "1 tsp brown sugar",
+    ],
+    method: [
+      "Whisk together coconut milk, curry paste, garlic, ginger, fish sauce, lime juice, and sugar.",
+      "Pour over chicken thighs in slow cooker.",
+      "Cook LOW 6–7 hrs or HIGH 3–4 hrs.",
+      "Shred chicken and stir well into the coconut curry sauce.",
+      "Taste and adjust — add lime juice for brightness, more curry paste for heat.",
+      "Portion over rice and veggies. Cool to room temp, then freeze.",
+    ],
+    tip: "Full-fat coconut milk is non-negotiable — light coconut milk splits and turns grainy when frozen. Red curry paste varies wildly by brand; Maesri is hotter than Mae Ploy. Start with 2 tbsp if you're heat-sensitive. Highest calorie base in the rotation — built for high intake days.",
+    levers: [
+      { label: "2 tbsp coconut milk drizzle",   batch: "1 cup (16 tbsp) coconut milk — portion per container",        cal: 60,  protein: 0, carbs: 2,  fat: 6,  fiber: 0 },
+      { label: "1 oz roasted cashews on top",    batch: "8 oz cashews — portion per container, add at serving",        cal: 160, protein: 5, carbs: 9,  fat: 13, fiber: 1 },
+      { label: "1/4 cup chickpeas mixed in",      batch: "2 cups (1 can) chickpeas — stir into batch after shredding", cal: 90,  protein: 5, carbs: 15, fat: 1,  fiber: 4 },
+      { label: "Extra 1 tsp curry paste",         batch: "8 tsp (about 2½ tbsp) curry paste — stir into batch",        cal: 10,  protein: 0, carbs: 2,  fat: 0,  fiber: 0 },
+    ],
+  },
+  {
+    id: "honeymustard", name: "Honey Mustard", tag: "Classic American", emoji: "🍯", color: "#EAB308", veggie: "brussels",
+    sauce: { cal: 55, protein: 1, carbs: 11, fat: 1, fiber: 0 },
+    ingredients: [
+      "4.5 lbs boneless skinless chicken thighs",
+      "1/3 cup Dijon mustard",
+      "3 tbsp honey",
+      "2 tbsp apple cider vinegar",
+      "1 tsp garlic powder",
+      "1 tsp onion powder",
+      "1/2 tsp smoked paprika",
+      "1/4 cup chicken broth",
+    ],
+    method: [
+      "Whisk together Dijon, honey, apple cider vinegar, garlic powder, onion powder, paprika, and broth.",
+      "Pour over chicken thighs in slow cooker.",
+      "Cook LOW 6–7 hrs or HIGH 3–4 hrs.",
+      "Shred chicken with two forks. Toss well in the thickened honey mustard sauce.",
+      "Taste and adjust — more Dijon for tang, more honey for sweetness.",
+      "Portion over rice and veggies. Cool to room temp, then freeze.",
+    ],
+    tip: "Use a quality Dijon — generic yellow mustard tastes flat after slow cooking. The honey caramelizes slightly and the sauce thickens on its own without cornstarch. If it looks thin after cooking, remove the lid for the last 30 minutes. Pairs exceptionally well with Brussels sprouts.",
+    levers: [
+      { label: "1 tbsp extra honey mustard at serving", batch: "½ cup (8 tbsp) honey mustard — portion per container",    cal: 55,  protein: 1, carbs: 6,  fat: 3,  fiber: 0 },
+      { label: "1 oz shredded cheddar on top",           batch: "8 oz (1 bag) shredded cheddar — portion per container",  cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
+      { label: "1/2 avocado at serving",                  batch: "4 avocados — slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
+      { label: "1 tbsp bacon bits on top",                batch: "½ cup (8 tbsp) real bacon bits — portion per container", cal: 40,  protein: 3, carbs: 0,  fat: 3,  fiber: 0 },
+    ],
+  },
+  {
+    id: "buffalo", name: "Buffalo", tag: "Classic Heat", emoji: "🌶️", color: "#7C3AED", veggie: "broccoli",
+    sauce: { cal: 15, protein: 0, carbs: 1, fat: 0, fiber: 0 },
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","1 tsp garlic powder","1 tsp onion powder","1 tsp smoked paprika","1 tsp black pepper","1/2 tsp salt","1/4 cup chicken broth","2–3 tbsp Frank's RedHot Buffalo per serving — add AFTER cooking"],
+    method: ["Rub dry seasonings over all chicken thighs.","Add chicken and broth to slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred chicken with two forks.","Toss shredded chicken in Frank's Buffalo sauce AFTER shredding — never during cooking.","Portion over rice and veggies. Cool then freeze."],
+    tip: "Frank's Buffalo is nearly calorie-free — basically vinegar and cayenne. Best flavor-to-calorie ratio in the rotation. Lowest calorie base overall, ideal for rest days. Never cook the buffalo sauce — add it after shredding.",
+    levers: [
+      { label: "1 tbsp light ranch drizzle", batch: "½ cup (8 tbsp) light ranch — portion per container",        cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
+      { label: "1 oz blue cheese crumbles",   batch: "8 oz blue cheese crumbles — portion per container",        cal: 100, protein: 6, carbs: 1, fat: 8,  fiber: 0 },
+      { label: "1/2 avocado at serving",      batch: "4 avocados — slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
+      { label: "1 tbsp full-fat ranch",       batch: "½ cup (8 tbsp) full-fat ranch — portion per container",    cal: 70,  protein: 0, carbs: 1, fat: 7,  fiber: 0 },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+
+let state = {
+  targetCal:      2750,
+  targetProtein:  175,
+  targetFiber:    30,
+  riceVal:        1.5,
+  veggieOverrides: {},  // { recipeId: veggieId } — only set when user overrides
+  cuties:         true,
+  riceCrispy:     false,
+  levers:         {},   // { recipeId: Set<number> }
+  activeId:       null,
+  showMethod:     false,
+};
+
+function setState(updates) {
+  state = Object.assign({}, state, updates);
+  render();
+}
+
+// ═══════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════
+
+function add(...items) {
+  return items.reduce((a, b) => ({
+    cal:     (a.cal     || 0) + (b && b.cal     || 0),
+    protein: (a.protein || 0) + (b && b.protein || 0),
+    carbs:   (a.carbs   || 0) + (b && b.carbs   || 0),
+    fat:     (a.fat     || 0) + (b && b.fat     || 0),
+    fiber:   (a.fiber   || 0) + (b && b.fiber   || 0),
+  }), { cal:0, protein:0, carbs:0, fat:0, fiber:0 });
+}
+
+function clamp(n) { return Math.round(Math.max(0, n)); }
+
+function getLunchMacros(rec) {
+  const rice      = RICE.find(r => r.value === state.riceVal);
+  const veggieId  = state.veggieOverrides[rec.id] || rec.veggie;
+  const veggie    = VEGGIES.find(v => v.id === veggieId);
+  const lvSet     = state.levers[rec.id] || new Set();
+  const lvTotal = rec.levers.reduce((acc, lv, i) =>
+    lvSet.has(i) ? add(acc, lv) : acc,
+    { cal:0, protein:0, carbs:0, fat:0, fiber:0 }
+  );
+  return add(CHICKEN, rice, veggie, rec.sauce, lvTotal,
+    state.cuties ? CUTIES : {}, state.riceCrispy ? TREAT : {});
+}
+
+function toggleLever(recId, idx) {
+  const prev = state.levers;
+  const s = new Set(prev[recId] || []);
+  s.has(idx) ? s.delete(idx) : s.add(idx);
+  setState({ levers: Object.assign({}, prev, { [recId]: s }) });
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════
+
+function render() {
+  const rice = RICE.find(r => r.value === state.riceVal);
+  const recipe = RECIPES.find(r => r.id === state.activeId);
+
+  document.getElementById("root").innerHTML = recipe
+    ? renderDetail(rice, recipe)
+    : renderGrid(rice);
+
+  // Re-attach input listeners after innerHTML replacement
+  document.querySelectorAll(".target-input").forEach(input => {
+    input.addEventListener("change", function() {
+      const key = this.dataset.target;
+      const val = parseInt(this.value) || 0;
+      setState({ [key]: val });
+    });
+    input.addEventListener("click", function(e) { e.stopPropagation(); });
+  });
+
+  attachEvents();
+}
+
+// ── Header HTML (shared) ─────────────────────────────
+
+function headerHTML() {
+  return `
+    <div class="header">
+      <div class="logo">🍗 Meal Prep Hub</div>
+      <div class="targets-row">
+        <div class="target-field">
+          <div class="target-label">Daily Calories</div>
+          <input class="target-input" type="number" data-target="targetCal" value="${state.targetCal}" min="0" step="50" />
+        </div>
+        <div class="target-field">
+          <div class="target-label">Protein (g)</div>
+          <input class="target-input" type="number" data-target="targetProtein" value="${state.targetProtein}" min="0" step="5" />
+        </div>
+        <div class="target-field">
+          <div class="target-label">Fiber (g)</div>
+          <input class="target-input" type="number" data-target="targetFiber" value="${state.targetFiber}" min="0" step="5" />
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Grid view ─────────────────────────────────────────
+
+function renderGrid(rice) {
+  const lunchRange = RECIPES.map(r => getLunchMacros(r).cal);
+  const lunchMin = Math.round(Math.min(...lunchRange));
+  const lunchMax = Math.round(Math.max(...lunchRange));
+  const dinnerMin = Math.round(state.targetCal - MORNING.cal - lunchMax);
+  const dinnerMax = Math.round(state.targetCal - MORNING.cal - lunchMin);
+
+  return `
+    ${headerHTML()}
+
+    <div class="controls">
+      <div class="flex-row">
+        <div>
+          <div class="control-label">Rice (cooked)</div>
+          <div class="pills-row">
+            ${RICE.map(r => `
+              <button class="pill${state.riceVal === r.value ? ' active-orange' : ''}" data-rice="${r.value}">
+                ${r.label}
+              </button>`).join("")}
+          </div>
+        </div>
+        <div>
+          <div class="control-label">Sides</div>
+          <div class="pills-row">
+            <button class="pill${state.cuties ? ' active-green' : ''}" data-toggle="cuties">🍊 2 Cuties</button>
+            <button class="pill${state.riceCrispy ? ' active-green' : ''}" data-toggle="riceCrispy">🍬 Rice Crispy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="budget">
+      <div class="budget-tile" style="border-top-color:#9CA3AF">
+        <div class="budget-label">☀️ Morning</div>
+        <div class="budget-num" style="color:#F9FAFB">${MORNING.cal}</div>
+        <div class="budget-sub">${MORNING.protein}g protein · ${MORNING.fiber}g fiber</div>
+      </div>
+      <div class="budget-sep">+</div>
+      <div class="budget-tile" style="border-top-color:#FF6B35">
+        <div class="budget-label">🍱 Lunch Range</div>
+        <div class="budget-num" style="color:#FF6B35">${lunchMin}–${lunchMax}</div>
+        <div class="budget-sub">varies by recipe</div>
+      </div>
+      <div class="budget-sep">=</div>
+      <div class="budget-tile" style="border-top-color:#3B82F6">
+        <div class="budget-label">🌙 Dinner Target</div>
+        <div class="budget-num" style="color:#60A5FA">${dinnerMin}–${dinnerMax}</div>
+        <div class="budget-sub">${state.targetCal} cal · ${state.targetProtein}g protein</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      ${RECIPES.map(rec => {
+        const m        = getLunchMacros(rec);
+        const lvSet    = state.levers[rec.id] || new Set();
+        const recVeggie = VEGGIES.find(v => v.id === (state.veggieOverrides[rec.id] || rec.veggie));
+        return `
+          <div class="recipe-card" style="border-top-color:${rec.color}" data-recipe="${rec.id}">
+            <div class="recipe-emoji">${rec.emoji}</div>
+            <div class="recipe-name">${rec.name}</div>
+            <div style="font-size:10px;color:#6B7280;margin-bottom:9px">${rec.tag} · ${recVeggie.emoji} ${recVeggie.label}</div>
+            <div class="mb-6">
+              <span class="chip" style="color:#FF6B35;background:#FF6B3518">${clamp(m.cal)} cal</span>
+              <span class="chip" style="color:#60A5FA;background:#60A5FA18">${clamp(m.protein)}g prot</span>
+              <span class="chip" style="color:#10B981;background:#10B98118">${Math.round(m.fiber)}g fiber</span>
+            </div>
+            ${lvSet.size > 0 ? `<div><span class="tag" style="color:#FF6B35;background:#FF6B3520">${lvSet.size} lever${lvSet.size > 1 ? "s" : ""} active</span></div>` : ""}
+            <div class="card-open">Open recipe →</div>
+          </div>`;
+      }).join("")}
+    </div>
+
+    <div class="footer">All recipes: 4.5 lb batch · 8 servings at 9 oz raw · Slow cooker · Freezer-ready</div>
+  `;
+}
+
+// ── Detail view ───────────────────────────────────────
+
+function renderDetail(rice, recipe) {
+  const activeVeggieId = state.veggieOverrides[recipe.id] || recipe.veggie;
+  const activeVeggie   = VEGGIES.find(v => v.id === activeVeggieId);
+  const isOverridden   = !!state.veggieOverrides[recipe.id];
+
+  const lunch  = getLunchMacros(recipe);
+  const lvSet  = state.levers[recipe.id] || new Set();
+  const dinner = {
+    cal:     state.targetCal     - MORNING.cal     - lunch.cal,
+    protein: state.targetProtein - MORNING.protein - lunch.protein,
+    fiber:   state.targetFiber   - MORNING.fiber   - lunch.fiber,
+  };
+
+  const lunchBudgetCal  = clamp(state.targetCal     - MORNING.cal);
+  const lunchBudgetProt = clamp(state.targetProtein - MORNING.protein);
+  const lunchBudgetFib  = clamp(state.targetFiber   - MORNING.fiber);
+
+  const breakdownRows = [
+    { label: "9 oz chicken thigh",             ...CHICKEN },
+    { label: `White rice (${rice.label})`, ...rice },
+    { label: `${activeVeggie.emoji} ${activeVeggie.label} (1/2 cup)`, ...activeVeggie },
+    { label: recipe.name + " sauce",           ...recipe.sauce },
+    ...(state.cuties     ? [{ label: "2 Cuties",          ...CUTIES }] : []),
+    ...(state.riceCrispy ? [{ label: "Rice Crispy Treat", ...TREAT  }] : []),
+    ...recipe.levers.filter((_, i) => lvSet.has(i)).map(lv => ({ label: "+ " + lv.label, ...lv })),
+  ];
+
+  function fiberBar(val, target, color) {
+    const pct = Math.min(100, (val / target) * 100);
+    const over = val > target;
+    return `<div class="fiber-bar-bg"><div class="fiber-bar-fill" style="width:${pct}%;background:${over ? '#EF4444' : color}"></div></div>`;
+  }
+
+  return `
+    ${headerHTML()}
+
+    <div class="recipe-head">
+      <button class="back-btn" data-back="1">← Recipes</button>
+      <span class="recipe-head-emoji">${recipe.emoji}</span>
+      <div>
+        <div class="recipe-head-name">${recipe.name}</div>
+        <div class="recipe-head-sub">${recipe.tag} · 4.5 lb batch · 8 servings · Freezer-ready</div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+
+      <!-- Live Macro Tiles -->
+      <div style="background:#111827;border-radius:10px;padding:12px;margin-bottom:12px;border-top:3px solid ${recipe.color}">
+        <div class="section-label" style="margin-bottom:10px">Live Lunch Macros</div>
+        <div class="macro-grid">
+          <div class="macro-tile" style="border-bottom-color:#FF6B35">
+            <div class="macro-num" style="color:#FF6B35">${clamp(lunch.cal)}</div>
+            <div class="macro-lbl">Calories</div>
+            <div class="macro-goal">of ${lunchBudgetCal}</div>
+            ${fiberBar(clamp(lunch.cal), lunchBudgetCal, "#FF6B35")}
+          </div>
+          <div class="macro-tile" style="border-bottom-color:#60A5FA">
+            <div class="macro-num" style="color:#60A5FA">${clamp(lunch.protein)}g</div>
+            <div class="macro-lbl">Protein</div>
+            <div class="macro-goal">of ${lunchBudgetProt}g</div>
+            ${fiberBar(clamp(lunch.protein), lunchBudgetProt, "#60A5FA")}
+          </div>
+          <div class="macro-tile" style="border-bottom-color:#FBBF24">
+            <div class="macro-num" style="color:#FBBF24">${clamp(lunch.carbs)}g</div>
+            <div class="macro-lbl">Carbs</div>
+          </div>
+          <div class="macro-tile" style="border-bottom-color:#10B981">
+            <div class="macro-num" style="color:#10B981">${Math.round(lunch.fiber)}g</div>
+            <div class="macro-lbl">Fiber</div>
+            <div class="macro-goal">of ${lunchBudgetFib}g</div>
+            ${fiberBar(Math.round(lunch.fiber), lunchBudgetFib, "#10B981")}
+          </div>
+        </div>
+      </div>
+
+      <!-- Veggie -->
+      <div class="mb-14">
+        <div class="section-label">Vegetable (1/2 cup)</div>
+        <div style="background:#0D1117;border-radius:8px;padding:10px 12px;border:1px solid #1F2937">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:18px">${activeVeggie.emoji}</span>
+            <span style="font-weight:600;font-size:13px">${activeVeggie.label}</span>
+            ${!isOverridden ? `<span class="tag" style="color:#10B981;background:#10B98120">Recommended</span>` : `<span class="tag" style="color:#FF6B35;background:#FF6B3520">Overridden</span>`}
+            <span style="font-size:10px;color:#6B7280;margin-left:auto">${activeVeggie.cal} cal · ${activeVeggie.protein}g prot · ${activeVeggie.fiber}g fiber</span>
+          </div>
+          <div style="font-size:10px;color:#10B981;padding:4px 6px;background:#10B98110;border-radius:4px;border-left:2px solid #10B981;margin-bottom:8px">📦 4 cups ${activeVeggie.label.toLowerCase()} for full batch (½ cup × 8 servings)</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            ${VEGGIES.map(v => `
+              <button class="pill${activeVeggieId === v.id ? ' active-orange' : ''}" data-veggie-override="${v.id}">
+                ${v.emoji} ${v.label}
+              </button>`).join("")}
+            ${isOverridden ? `<button class="pill active-green" data-veggie-reset="1">↺ Reset</button>` : ""}
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Levers -->
+      <div class="mb-14">
+        <div class="section-label">Bulk Levers</div>
+        ${recipe.levers.map((lv, idx) => {
+          const active = lvSet.has(idx);
+          return `
+            <div class="lever-row${active ? ' active' : ''}" data-lever="${idx}">
+              <div class="checkbox${active ? ' active' : ''}">
+                ${active ? '<span class="check-mark">✓</span>' : ''}
+              </div>
+              <div style="flex:1">
+                <div class="lever-label${active ? ' active' : ''}">${lv.label}</div>
+                <div class="lever-macros">+${lv.cal} cal · +${lv.protein}g prot · +${Math.round(lv.fiber)}g fiber · +${lv.fat}g fat</div>
+                ${active ? `<div style="font-size:10px;color:#FF6B35;margin-top:4px;padding:4px 6px;background:#FF6B3510;border-radius:4px;border-left:2px solid #FF6B35">📦 ${lv.batch}</div>` : ""}
+              </div>
+            </div>`;
+        }).join("")}
+      </div>
+
+      <!-- Breakdown -->
+      <div class="mb-14">
+        <div class="section-label">Meal Breakdown</div>
+        <div class="breakdown-card">
+          ${breakdownRows.map(row => `
+            <div class="breakdown-row">
+              <span class="bd-label">${row.label}</span>
+              <span class="bd-cal">${clamp(row.cal)} cal</span>
+              <span class="bd-prot">${clamp(row.protein)}g prot</span>
+              <span class="bd-fib">${Math.round(row.fiber || 0)}g fib</span>
+            </div>`).join("")}
+          <div class="breakdown-row total">
+            <span class="bd-label" style="color:#F9FAFB">Lunch Total</span>
+            <span class="bd-cal">${clamp(lunch.cal)}</span>
+            <span class="bd-prot">${clamp(lunch.protein)}g</span>
+            <span class="bd-fib">${Math.round(lunch.fiber)}g</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dinner Headroom -->
+      <div class="dinner-card">
+        <div class="section-label" style="margin-bottom:10px">🌙 Dinner Headroom</div>
+        <div class="dinner-grid">
+          ${[
+            { label: "Calories left",  val: dinner.cal,     unit: "",  color: "#FF6B35" },
+            { label: "Protein left",   val: dinner.protein, unit: "g", color: "#60A5FA" },
+            { label: "Fiber left",     val: dinner.fiber,   unit: "g", color: "#10B981" },
+          ].map(m => {
+            const over = m.val < 0;
+            return `
+              <div class="dinner-tile">
+                <div class="dinner-num" style="color:${over ? '#EF4444' : m.color}">
+                  ${over ? "−" : ""}${Math.abs(Math.round(m.val))}${m.unit}
+                </div>
+                <div class="dinner-lbl">${m.label}</div>
+                ${over ? '<div class="dinner-over">over target</div>' : ""}
+              </div>`;
+          }).join("")}
+        </div>
+        <div class="dinner-footer">
+          Morning ${MORNING.cal} cal + Lunch ${clamp(lunch.cal)} cal = ${clamp(MORNING.cal + lunch.cal)} of ${state.targetCal} cal daily target
+        </div>
+      </div>
+
+      <!-- Recipe Toggle -->
+      <div class="mt-14">
+        <button class="recipe-toggle" data-method-toggle="1">
+          <span>Full Recipe — Ingredients & Method</span>
+          <span>${state.showMethod ? "▲" : "▼"}</span>
+        </button>
+        ${state.showMethod ? `
+          <div class="recipe-body">
+            <div class="section-label mb-8">Ingredients (Full 4.5 lb Batch / 8 Servings)</div>
+            ${recipe.ingredients.map(ing => `
+              <div class="ingr-item">
+                <span style="color:${recipe.color};font-size:14px;flex-shrink:0">·</span>
+                <span>${ing}</span>
+              </div>`).join("")}
+            <div class="section-label" style="margin-top:14px;margin-bottom:8px">Method</div>
+            ${recipe.method.map((step, i) => `
+              <div class="step-row">
+                <div class="step-num" style="background:${recipe.color}">${i + 1}</div>
+                <div class="step-text">${step}</div>
+              </div>`).join("")}
+            <div class="tip-box" style="border-left:3px solid ${recipe.color}">💡 ${recipe.tip}</div>
+          </div>` : ""}
+      </div>
+
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════
+//  EVENT DELEGATION
+// ═══════════════════════════════════════════════════
+
+// ── Boot ─────────────────────────────────────────────
+
+// Single delegated listener attached once — reads live `state` on every click
+document.getElementById("root").addEventListener("click", function(e) {
+  const btn = e.target.closest("[data-phase]");
+  if (btn) {
+    const p = PHASES.find(x => x.id === btn.dataset.phase);
+    setState({ phaseId: p.id, riceVal: p.riceDefault });
+    return;
+  }
+
+  const vegBtn = e.target.closest("[data-veggie]");
+  if (vegBtn) { setState({ veggieId: vegBtn.dataset.veggie }); return; }
+
+  const riceBtn = e.target.closest("[data-rice]");
+  if (riceBtn) { setState({ riceVal: parseFloat(riceBtn.dataset.rice) }); return; }
+
+  const toggleBtn = e.target.closest("[data-toggle]");
+  if (toggleBtn) {
+    const key = toggleBtn.dataset.toggle;
+    setState({ [key]: !state[key] });
+    return;
+  }
+
+  const recBtn = e.target.closest("[data-recipe]");
+  if (recBtn) { setState({ activeId: recBtn.dataset.recipe, showMethod: false }); return; }
+
+  const backBtn = e.target.closest("[data-back]");
+  if (backBtn) { setState({ activeId: null, showMethod: false }); return; }
+
+  const veggieOverrideBtn = e.target.closest("[data-veggie-override]");
+  if (veggieOverrideBtn && state.activeId) {
+    const overrides = Object.assign({}, state.veggieOverrides);
+    const rec = RECIPES.find(r => r.id === state.activeId);
+    if (veggieOverrideBtn.dataset.veggieOverride === rec.veggie) {
+      delete overrides[state.activeId]; // selecting default = reset
+    } else {
+      overrides[state.activeId] = veggieOverrideBtn.dataset.veggieOverride;
+    }
+    setState({ veggieOverrides: overrides });
+    return;
+  }
+
+  const veggieResetBtn = e.target.closest("[data-veggie-reset]");
+  if (veggieResetBtn && state.activeId) {
+    const overrides = Object.assign({}, state.veggieOverrides);
+    delete overrides[state.activeId];
+    setState({ veggieOverrides: overrides });
+    return;
+  }
+
+  const methodBtn = e.target.closest("[data-method-toggle]");
+  if (methodBtn) { setState({ showMethod: !state.showMethod }); return; }
+
+  const leverBtn = e.target.closest("[data-lever]");
+  if (leverBtn && state.activeId) {
+    toggleLever(state.activeId, parseInt(leverBtn.dataset.lever));
+    return;
+  }
+});
+
+function attachEvents() {} // no-op, kept for render() call compatibility
+
+render();
+</script>
+</body>
+</html>
