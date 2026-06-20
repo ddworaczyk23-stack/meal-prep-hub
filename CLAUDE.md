@@ -47,7 +47,9 @@ state since state persists across reloads.
   per-serving; scale by `state.servings` at render time.
 - `RICE` / `VEGGIES` — option lists with macros. Veggie macros assume the recipe's
   default 1/2 cup serving; `grams` field is the weight of that serving.
-- Rice macros are based on jasmine white rice cooked in water (no oil/salt).
+- Rice macros are taken directly from the Mahatma Jasmine Thai Long Grain Rice
+  package label (150 cal / 3g protein / 34g carbs / 0g fat / 1g fiber per "about
+  1 cup cooked" serving), scaled linearly for the other serving sizes.
 - State: single mutable `state` object + `setState(updates)` which merges, persists to
   `localStorage` (key `mealPrepHubState`), and does a full `render()`. No virtual DOM —
   `render()` rebuilds `innerHTML` from template strings. Click handling is one
