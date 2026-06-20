@@ -150,11 +150,12 @@ const BASE_SERVINGS = 8;        // recipes are written for 8 servings (4.5 lb ba
 const RAW_OZ_PER_SERVING = 9;   // raw chicken per serving — what's on the package
 const RAW_G_PER_SERVING = 255;  // gram add-on for slow cooker / container portioning
 
+// Macros based on jasmine white rice, cooked in water (no oil/salt): ~129 cal, 2.4g protein, 28g carbs, 0.3g fat, 0.3g fiber per 100g.
 const RICE = [
-  { value: 1,   label: "1 cup (185g)",    grams: 185, cal: 200, protein: 4,  carbs: 44,  fat: 0, fiber: 1 },
-  { value: 1.5, label: "1.5 cups (280g)", grams: 280, cal: 300, protein: 6,  carbs: 66,  fat: 0, fiber: 1 },
-  { value: 2,   label: "2 cups (370g)",   grams: 370, cal: 400, protein: 8,  carbs: 88,  fat: 0, fiber: 1 },
-  { value: 2.5, label: "2.5 cups (465g)", grams: 465, cal: 500, protein: 10, carbs: 110, fat: 0, fiber: 2 },
+  { value: 1,   label: "1 cup (185g)",    grams: 185, cal: 239, protein: 4,  carbs: 52,  fat: 1, fiber: 1 },
+  { value: 1.5, label: "1.5 cups (280g)", grams: 280, cal: 361, protein: 7,  carbs: 78,  fat: 1, fiber: 1 },
+  { value: 2,   label: "2 cups (370g)",   grams: 370, cal: 477, protein: 9,  carbs: 104, fat: 1, fiber: 1 },
+  { value: 2.5, label: "2.5 cups (465g)", grams: 465, cal: 600, protein: 11, carbs: 130, fat: 1, fiber: 1 },
 ];
 
 const VEGGIES = [
