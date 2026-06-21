@@ -182,11 +182,13 @@ const RECIPES = [
     ingredients: ["4.5 lbs boneless skinless chicken thighs","1/3 cup low-sodium soy sauce (80g)","6 garlic cloves, minced (or 2 tsp garlic powder)","1 tbsp fresh ginger (6g; or 1 tsp ground ginger)","2 tbsp rice vinegar (30g)","1 tbsp honey (21g)","1/4 cup chicken broth (60g)","1/2 tsp sesame oil per serving (2g) — add AFTER cooking"],
     method: ["Combine soy sauce, garlic, ginger, rice vinegar, honey, and broth.","Pour over chicken thighs in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred or slice chicken, toss in cooking juices.","Add sesame oil AFTER shredding — not during cooking, it turns bitter.","Portion over rice and veggies. Cool to room temp, then freeze."],
     tip: "Track raw chicken weight before loading the cooker. Cooked weight shrinks ~25%. Sesame oil added during cooking turns bitter — always add after.",
+    splitTip: "Split after shredding: toss half in the base sauce as usual, toss the other half in extra Teriyaki sauce (cook the Teriyaki recipe's glaze separately, or just buy a bottle) for two distinct flavors from one batch.",
     levers: [
       { label: "1 tbsp peanut butter in sauce",    qty: 1,   unit: "tbsp", grams: 16, item: "peanut butter",    note: "add to sauce before cooking",          cal: 95,  protein: 4, carbs: 3, fat: 8,  fiber: 0.5 },
       { label: "1 tbsp crushed peanuts at serving", qty: 1,   unit: "tbsp", grams: 9,  item: "crushed peanuts",  note: "portion per container at packing",      cal: 50,  protein: 2, carbs: 2, fat: 4,  fiber: 0.5 },
       { label: "Extra 1 tsp sesame oil drizzle",    qty: 1,   unit: "tsp",  grams: 5,  item: "sesame oil",       note: "portion per container at packing",      cal: 40,  protein: 0, carbs: 0, fat: 5,  fiber: 0   },
       { label: "1/2 cup edamame mixed in",           qty: 0.5, unit: "cup",  grams: 75, item: "edamame",          note: "stir into batch after shredding",       cal: 95,  protein: 8, carbs: 7, fat: 4,  fiber: 4   },
+      { label: "2 tbsp crushed chow mein noodles",   qty: 2,   unit: "tbsp", grams: 7,  item: "chow mein noodles", note: "crunch topping, add fresh at packing",  cal: 35,  protein: 0, carbs: 4, fat: 2,  fiber: 0   },
     ],
   },
   {
@@ -195,6 +197,7 @@ const RECIPES = [
     ingredients: ["4.5 lbs boneless skinless chicken thighs","1/2 cup BBQ sauce (140g; measure carefully — brands vary wildly)","1 tbsp smoked paprika","1 tsp garlic powder","1 tsp onion powder","1 tsp black pepper","1 tbsp Worcestershire sauce (18g; deepens the smoke flavor)","1/4 cup apple cider vinegar (60g)"],
     method: ["Mix BBQ sauce, paprika, garlic powder, onion powder, pepper, Worcestershire, and vinegar.","Pour sauce over chicken in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Pull apart chicken with two forks. Toss in thickened cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "BBQ sauce is your main calorie trap — 2 tbsp can hit 80–90 cal and most people pour more. Measure it. Choose a brand under 12g sugar per 2 tbsp. Apple cider vinegar keeps the pull moist without adding calories.",
+    splitTip: "Split after pulling: toss half in the base BBQ sauce, toss the other half in Buffalo (Frank's RedHot, added cold/post-cook) for a sweet-vs-spicy pair from one cook.",
     levers: [
       { label: "Extra 1 tbsp BBQ sauce at serving", qty: 1,   unit: "tbsp",    grams: 17, item: "BBQ sauce",        note: "portion per container",                       cal: 30,  protein: 0, carbs: 7, fat: 0,  fiber: 0 },
       { label: "1 oz shredded cheddar on top",       qty: 1,   unit: "oz",      grams: 28, item: "shredded cheddar", note: "portion per container",                       cal: 110, protein: 7, carbs: 0, fat: 9,  fiber: 0 },
@@ -209,12 +212,14 @@ const RECIPES = [
     ingredients: ["4.5 lbs boneless skinless chicken thighs","2 tsp cumin","2 tsp chili powder","1 tsp garlic powder","1 tsp smoked paprika","1 tsp oregano","1/2 cup salsa or diced tomatoes with green chiles (130g)","Juice of 1 lime","Easy swap: 1 packet (1 oz) taco seasoning instead of the cumin/chili powder/garlic powder/paprika/oregano"],
     method: ["Rub dry seasonings over all chicken thighs.","Place in slow cooker. Pour salsa and lime juice over top.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred chicken and toss in cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "Leanest base in the rotation — use on rest days when calories run lower. Add jalapeños or hot sauce for heat at zero calorie cost. Tomato-salsa base freezes exceptionally well.",
+    splitTip: "Split after shredding: toss half in the salsa base, toss the other half in Chipotle Pepper's adobo sauce for a mild-vs-smoky pair from one cook.",
     levers: [
       { label: "1/2 avocado at serving",         qty: 0.5, unit: "avocado",  grams: 75, item: "avocado",              note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
       { label: "2 tbsp full-fat sour cream",      qty: 2,   unit: "tbsp",     grams: 30, item: "sour cream",           note: "portion per container",                       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
       { label: "1 oz Mexican cheese blend",        qty: 1,   unit: "oz",       grams: 28, item: "Mexican cheese blend", note: "portion per container",                       cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
       { label: "Flour tortilla wrap (swap rice)",  qty: 1,   unit: "tortilla", grams: 45, item: "flour tortilla",       note: "store separately, wrap at each meal",         cal: 200, protein: 6, carbs: 36, fat: 3,  fiber: 1 },
       { label: "2 tbsp quick-pickled red onion",   qty: 2,   unit: "tbsp",     grams: 20, item: "quick-pickled red onion", note: "make once (sliced onion + vinegar + pinch sugar/salt, 30 min, keeps weeks in the fridge) — spoon on at packing", cal: 5, protein: 0, carbs: 1, fat: 0, fiber: 0 },
+      { label: "1/4 cup crushed tortilla chips",   qty: 0.25, unit: "cup",     grams: 10, item: "tortilla chips",       note: "crunch topping, add fresh at packing",        cal: 50, protein: 1, carbs: 7, fat: 2, fiber: 0.5 },
     ],
   },
   {
@@ -223,11 +228,13 @@ const RECIPES = [
     ingredients: ["4.5 lbs boneless skinless chicken thighs","2 cans (28 oz / 794g each) crushed tomatoes","8 garlic cloves, minced","2–3 tsp red pepper flakes — adjust to heat preference","1 tbsp olive oil (14g)","1 tbsp tomato paste (16g; deepens the sauce)","1 tsp sugar (balances acidity)","1 tsp Italian seasoning","1 tsp kosher salt","1 bay leaf (remove before freezing)","Fresh basil if available — add after cooking"],
     method: ["Add crushed tomatoes, garlic, olive oil, tomato paste, sugar, seasonings, salt, and bay leaf to slow cooker.","Nestle chicken thighs into the sauce.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Remove and discard bay leaf.","Shred or slice chicken, stir back into sauce.","Optional: blend smooth with immersion blender.","Portion over rice and veggies. Cool then freeze."],
     tip: "Tomato-based sauces are the most freezer-stable — this reheats the best of all six. Red pepper flakes lose heat in the slow cooker, so add more at serving if needed.",
+    splitTip: "Split after shredding: toss half in the Arrabbiata sauce, toss the other half in Roasted Red Pepper sauce — two Italian-style sauces from very similar prep, one batch.",
     levers: [
       { label: "1 tbsp olive oil drizzle at serving", qty: 1,    unit: "tbsp", grams: 14, item: "olive oil",          note: "portion per container",          cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
       { label: "1 oz burrata or ricotta on top",       qty: 1,    unit: "oz",   grams: 28, item: "burrata or ricotta", note: "portion per container",          cal: 90,  protein: 6, carbs: 1,  fat: 7,  fiber: 0 },
       { label: "1/4 cup white beans mixed in",          qty: 0.25, unit: "cup",  grams: 45, item: "white beans",       note: "stir into batch after cooking", cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
       { label: "1 oz shredded parmesan on top",         qty: 1,    unit: "oz",   grams: 28, item: "parmesan",          note: "portion per container",          cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
+      { label: "2 tbsp garlic croutons, crushed",        qty: 2,    unit: "tbsp", grams: 6,  item: "garlic croutons",   note: "crunch topping, add fresh at packing", cal: 25, protein: 1, carbs: 4, fat: 1, fiber: 0 },
     ],
   },
   {
@@ -241,6 +248,7 @@ const RECIPES = [
       { label: "1 oz fresh mozzarella or burrata",     qty: 1, unit: "oz",   grams: 28, item: "mozzarella or burrata", note: "portion per container", cal: 80,  protein: 6, carbs: 1,  fat: 6,  fiber: 0 },
       { label: "1 tbsp olive oil drizzle at serving",  qty: 1, unit: "tbsp", grams: 14, item: "olive oil",            note: "portion per container", cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
       { label: "1 oz shredded parmesan on top",        qty: 1, unit: "oz",   grams: 28, item: "parmesan",             note: "portion per container", cal: 110, protein:10, carbs: 1,  fat: 7,  fiber: 0 },
+      { label: "2 tbsp garlic croutons, crushed",       qty: 2, unit: "tbsp", grams: 6,  item: "garlic croutons",      note: "crunch topping, add fresh at packing", cal: 25, protein: 1, carbs: 4, fat: 1, fiber: 0 },
     ],
   },
   {
@@ -266,11 +274,13 @@ const RECIPES = [
       "Portion over rice and veggies. Cool to room temp, then freeze.",
     ],
     tip: "Chipotles in adobo vary in heat by brand — La Costeña runs hotter than San Marcos. Start with 3 peppers the first batch and adjust up. The adobo sauce itself carries a lot of the flavor, so don't skip it. Freezes exceptionally well.",
+    splitTip: "Split after shredding: toss half in the chipotle-adobo sauce, toss the other half in Tex-Mex's milder salsa base for a smoky-vs-mild pair from one cook.",
     levers: [
       { label: "1/2 avocado at serving",      qty: 0.5, unit: "avocado", grams: 75, item: "avocado",              note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
       { label: "2 tbsp full-fat sour cream",   qty: 2,   unit: "tbsp",    grams: 30, item: "sour cream",           note: "portion per container",                       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
       { label: "1 oz Mexican cheese blend",     qty: 1,   unit: "oz",      grams: 28, item: "Mexican cheese blend", note: "portion per container",                       cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
       { label: "1 tbsp olive oil drizzle",      qty: 1,   unit: "tbsp",    grams: 14, item: "olive oil",            note: "portion per container",                       cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
+      { label: "1/4 cup crushed tortilla chips", qty: 0.25, unit: "cup",   grams: 10, item: "tortilla chips",       note: "crunch topping, add fresh at packing",        cal: 50,  protein: 1, carbs: 7,  fat: 2,  fiber: 0.5 },
     ],
   },
   {
@@ -298,11 +308,13 @@ const RECIPES = [
       "Portion over rice and veggies. Cool to room temp, then freeze.",
     ],
     tip: "Lemon juice mellows significantly during slow cooking — don't be shy with it. The zest holds more flavor than the juice; adding fresh zest at serving is the easiest way to punch it back up. Lightest calorie base in the rotation.",
+    splitTip: "Split after shredding: toss half in the lemon-herb sauce, toss the other half in Honey Mustard's sauce for a bright-vs-sweet pair from one cook.",
     levers: [
       { label: "1 tbsp olive oil drizzle at serving", qty: 1,    unit: "tbsp", grams: 14, item: "olive oil",    note: "portion per container",               cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
       { label: "1 oz feta cheese crumbled on top",    qty: 1,    unit: "oz",   grams: 28, item: "feta cheese",  note: "crumble and portion per container",    cal: 75,  protein: 4, carbs: 1,  fat: 6,  fiber: 0 },
       { label: "1/4 cup white beans mixed in",         qty: 0.25, unit: "cup",  grams: 45, item: "white beans",  note: "stir into batch after cooking",        cal: 100, protein: 6, carbs: 18, fat: 0,  fiber: 4 },
       { label: "2 tbsp hummus at serving",              qty: 2,    unit: "tbsp", grams: 30, item: "hummus",       note: "portion per container",               cal: 70,  protein: 2, carbs: 6,  fat: 5,  fiber: 2 },
+      { label: "1/4 cup toasted pita chips, crushed",   qty: 0.25, unit: "cup",  grams: 12, item: "pita chips",   note: "crunch topping, add fresh at packing", cal: 55,  protein: 1, carbs: 9,  fat: 2,  fiber: 0.5 },
     ],
   },
   {
@@ -326,11 +338,13 @@ const RECIPES = [
       "Portion over rice and veggies. Cool to room temp, then freeze.",
     ],
     tip: "The cornstarch slurry at the end is what separates teriyaki from plain soy chicken — don't skip it. If you forget, reduce the cooking juices in a saucepan for 5 minutes after shredding. Glaze thickens further as it cools in containers.",
+    splitTip: "Split after shredding: toss half in the teriyaki glaze, toss the other half in the plain Soy Garlic Sesame sauce for two Asian-style flavors from one cook.",
     levers: [
       { label: "1 tbsp sesame seeds on top",           qty: 1,   unit: "tbsp", grams: 9,  item: "sesame seeds",  note: "sprinkle per container at packing",   cal: 50,  protein: 2, carbs: 2,  fat: 4,  fiber: 1 },
       { label: "1/2 cup edamame mixed in",              qty: 0.5, unit: "cup",  grams: 75, item: "edamame",       note: "stir into batch after shredding",     cal: 95,  protein: 8, carbs: 7,  fat: 4,  fiber: 4 },
       { label: "1 tbsp peanut butter in sauce",         qty: 1,   unit: "tbsp", grams: 16, item: "peanut butter", note: "whisk into sauce before cooking",     cal: 95, protein: 4, carbs: 3, fat: 8, fiber: 0.5 },
       { label: "Extra 1 tbsp teriyaki drizzle",         qty: 1,   unit: "tbsp", grams: 18, item: "teriyaki sauce", note: "portion per container",               cal: 35,  protein: 1, carbs: 7,  fat: 0,  fiber: 0 },
+      { label: "2 tbsp crispy wonton strips",           qty: 2,   unit: "tbsp", grams: 6,  item: "wonton strips",  note: "crunch topping, add fresh at packing", cal: 30,  protein: 0, carbs: 4, fat: 1, fiber: 0 },
     ],
   },
   {
@@ -355,11 +369,13 @@ const RECIPES = [
       "Portion over rice and veggies. Cool to room temp, then freeze.",
     ],
     tip: "Full-fat coconut milk is non-negotiable — light coconut milk splits and turns grainy when frozen. Red curry paste varies wildly by brand; Maesri is hotter than Mae Ploy. Start with 2 tbsp if you're heat-sensitive. Highest calorie base in the rotation — built for high intake days.",
+    splitTip: "Split after shredding: toss half in the red curry sauce, toss the other half in extra Teriyaki sauce for a coconut-curry-vs-Asian-glaze pair from one cook.",
     levers: [
       { label: "2 tbsp coconut milk drizzle",   qty: 2,    unit: "tbsp", grams: 30, item: "coconut milk",     note: "portion per container",          cal: 60,  protein: 0, carbs: 2,  fat: 6,  fiber: 0 },
       { label: "1 oz roasted cashews on top",    qty: 1,    unit: "oz",   grams: 28, item: "roasted cashews",  note: "portion per container, add at serving", cal: 160, protein: 5, carbs: 9,  fat: 13, fiber: 1 },
       { label: "1/4 cup chickpeas mixed in",      qty: 0.25, unit: "cup",  grams: 41, item: "chickpeas",        note: "stir into batch after shredding", cal: 90,  protein: 5, carbs: 15, fat: 1,  fiber: 4 },
       { label: "Extra 1 tsp curry paste",         qty: 1,    unit: "tsp",  grams: 6,  item: "curry paste",      note: "stir into batch",                cal: 10,  protein: 0, carbs: 2,  fat: 0,  fiber: 0 },
+      { label: "2 tbsp crispy fried shallots",     qty: 2,    unit: "tbsp", grams: 6,  item: "fried shallots",   note: "crunch topping, add fresh at packing", cal: 35, protein: 0, carbs: 3, fat: 2, fiber: 0 },
     ],
   },
   {
@@ -384,12 +400,14 @@ const RECIPES = [
       "Portion over rice and veggies. Cool to room temp, then freeze.",
     ],
     tip: "Use a quality Dijon — generic yellow mustard tastes flat after slow cooking. The honey caramelizes slightly and the sauce thickens on its own without cornstarch. If it looks thin after cooking, remove the lid for the last 30 minutes. Pairs exceptionally well with Brussels sprouts.",
+    splitTip: "Split after shredding: toss half in the honey mustard sauce, toss the other half in BBQ sauce for a tangy-vs-smoky pair from one cook.",
     levers: [
       { label: "1 tbsp extra honey mustard at serving", qty: 1,   unit: "tbsp",    grams: 17, item: "honey mustard",  note: "portion per container",                       cal: 55,  protein: 1, carbs: 6,  fat: 3,  fiber: 0 },
       { label: "1 oz shredded cheddar on top",           qty: 1,   unit: "oz",      grams: 28, item: "shredded cheddar", note: "portion per container",                     cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
       { label: "1/2 avocado at serving",                  qty: 0.5, unit: "avocado", grams: 75, item: "avocado",        note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
       { label: "1 tbsp bacon bits on top",                qty: 1,   unit: "tbsp",    grams: 7,  item: "real bacon bits", note: "portion per container",                     cal: 40,  protein: 3, carbs: 0,  fat: 3,  fiber: 0 },
       { label: "2 tbsp quick-pickled red onion",          qty: 2,   unit: "tbsp",    grams: 20, item: "quick-pickled red onion", note: "make once (sliced onion + vinegar + pinch sugar/salt, 30 min, keeps weeks in the fridge) — spoon on at packing", cal: 5, protein: 0, carbs: 1, fat: 0, fiber: 0 },
+      { label: "1/4 cup fried onion straws",              qty: 0.25, unit: "cup",   grams: 7,  item: "fried onion straws", note: "crunch topping, add fresh at packing", cal: 40, protein: 0, carbs: 4, fat: 3, fiber: 0 },
     ],
   },
   {
@@ -398,12 +416,14 @@ const RECIPES = [
     ingredients: ["4.5 lbs boneless skinless chicken thighs","1 tsp garlic powder","1 tsp onion powder","1 tsp smoked paprika","1 tsp black pepper","1/2 tsp salt","1/4 cup chicken broth (60g)","2–3 tbsp (30–45g) Frank's RedHot Buffalo per serving — add AFTER cooking"],
     method: ["Rub dry seasonings over all chicken thighs.","Add chicken and broth to slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred chicken with two forks.","Toss shredded chicken in Frank's Buffalo sauce AFTER shredding — never during cooking.","Portion over rice and veggies. Cool then freeze."],
     tip: "Frank's Buffalo is nearly calorie-free — basically vinegar and cayenne. Best flavor-to-calorie ratio in the rotation. Lowest calorie base overall, ideal for rest days. Never cook the buffalo sauce — add it after shredding.",
+    splitTip: "Split after shredding: toss half in Frank's Buffalo, toss the other half in BBQ sauce for a spicy-vs-sweet pair from one cook.",
     levers: [
       { label: "1 tbsp light ranch drizzle", qty: 1,   unit: "tbsp",    grams: 15, item: "light ranch",         note: "portion per container",                       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
       { label: "1 oz blue cheese crumbles",   qty: 1,   unit: "oz",      grams: 28, item: "blue cheese crumbles", note: "portion per container",                      cal: 100, protein: 6, carbs: 1, fat: 8,  fiber: 0 },
       { label: "1/2 avocado at serving",      qty: 0.5, unit: "avocado", grams: 75, item: "avocado",             note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
       { label: "1 tbsp full-fat ranch",       qty: 1,   unit: "tbsp",    grams: 15, item: "full-fat ranch",      note: "portion per container",                       cal: 70,  protein: 0, carbs: 1, fat: 7,  fiber: 0 },
       { label: "2 tbsp quick-pickled red onion", qty: 2, unit: "tbsp",   grams: 20, item: "quick-pickled red onion", note: "make once (sliced onion + vinegar + pinch sugar/salt, 30 min, keeps weeks in the fridge) — spoon on at packing", cal: 5, protein: 0, carbs: 1, fat: 0, fiber: 0 },
+      { label: "1/4 cup crushed tortilla chips", qty: 0.25, unit: "cup", grams: 10, item: "tortilla chips",      note: "crunch topping, add fresh at packing",        cal: 50,  protein: 1, carbs: 7, fat: 2,  fiber: 0.5 },
     ],
   },
 ];
@@ -841,6 +861,12 @@ function renderDetail(rice, recipe) {
               </div>
             </div>`;
         }).join("")}
+      </div>
+
+      <!-- Split Batch -->
+      <div class="mb-14" style="background:#111827;border-radius:8px;padding:10px 12px;border-left:3px solid ${recipe.color}">
+        <div class="section-label" style="margin-bottom:6px">🔀 Split This Batch</div>
+        <div style="font-size:11px;color:#9CA3AF;line-height:1.5">${recipe.splitTip}</div>
       </div>
 
       <!-- Ingredients (full shopping list, this batch) -->
