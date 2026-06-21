@@ -192,20 +192,21 @@ const RECIPES = [
   {
     id: "bbq", name: "BBQ Smoke", tag: "Southern-Style", emoji: "🔥", color: "#F97316", veggie: "gbeans",
     sauce: { cal: 55, protein: 0, carbs: 13, fat: 0, fiber: 0 },
-    ingredients: ["4.5 lbs boneless skinless chicken thighs","1/2 cup BBQ sauce (140g; measure carefully — brands vary wildly)","1 tbsp smoked paprika","1 tsp garlic powder","1 tsp onion powder","1 tsp black pepper","1/4 cup apple cider vinegar (60g)"],
-    method: ["Mix BBQ sauce, paprika, garlic powder, onion powder, pepper, and vinegar.","Pour sauce over chicken in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Pull apart chicken with two forks. Toss in thickened cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","1/2 cup BBQ sauce (140g; measure carefully — brands vary wildly)","1 tbsp smoked paprika","1 tsp garlic powder","1 tsp onion powder","1 tsp black pepper","1 tbsp Worcestershire sauce (18g; deepens the smoke flavor)","1/4 cup apple cider vinegar (60g)"],
+    method: ["Mix BBQ sauce, paprika, garlic powder, onion powder, pepper, Worcestershire, and vinegar.","Pour sauce over chicken in slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Pull apart chicken with two forks. Toss in thickened cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "BBQ sauce is your main calorie trap — 2 tbsp can hit 80–90 cal and most people pour more. Measure it. Choose a brand under 12g sugar per 2 tbsp. Apple cider vinegar keeps the pull moist without adding calories.",
     levers: [
       { label: "Extra 1 tbsp BBQ sauce at serving", qty: 1,   unit: "tbsp",    grams: 17, item: "BBQ sauce",        note: "portion per container",                       cal: 30,  protein: 0, carbs: 7, fat: 0,  fiber: 0 },
       { label: "1 oz shredded cheddar on top",       qty: 1,   unit: "oz",      grams: 28, item: "shredded cheddar", note: "portion per container",                       cal: 110, protein: 7, carbs: 0, fat: 9,  fiber: 0 },
       { label: "1 tbsp full-fat sour cream",          qty: 1,   unit: "tbsp",    grams: 15, item: "sour cream",       note: "portion per container",                       cal: 30,  protein: 0, carbs: 1, fat: 3,  fiber: 0 },
       { label: "1/2 avocado at serving",              qty: 0.5, unit: "avocado", grams: 75, item: "avocado",          note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
+      { label: "2 tbsp quick-pickled red onion",      qty: 2,   unit: "tbsp",    grams: 20, item: "quick-pickled red onion", note: "make once (sliced onion + vinegar + pinch sugar/salt, 30 min, keeps weeks in the fridge) — spoon on at packing", cal: 5, protein: 0, carbs: 1, fat: 0, fiber: 0 },
     ],
   },
   {
     id: "texmex", name: "Tex-Mex Salsa", tag: "Southwest-Style", emoji: "🌮", color: "#EF4444", veggie: "peppers",
     sauce: { cal: 20, protein: 1, carbs: 4, fat: 0, fiber: 1 },
-    ingredients: ["4.5 lbs boneless skinless chicken thighs","2 tsp cumin","2 tsp chili powder","1 tsp garlic powder","1 tsp smoked paprika","1 tsp oregano","1/2 cup salsa or diced tomatoes with green chiles (130g)","Juice of 1 lime"],
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","2 tsp cumin","2 tsp chili powder","1 tsp garlic powder","1 tsp smoked paprika","1 tsp oregano","1/2 cup salsa or diced tomatoes with green chiles (130g)","Juice of 1 lime","Easy swap: 1 packet (1 oz) taco seasoning instead of the cumin/chili powder/garlic powder/paprika/oregano"],
     method: ["Rub dry seasonings over all chicken thighs.","Place in slow cooker. Pour salsa and lime juice over top.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred chicken and toss in cooking juices.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "Leanest base in the rotation — use on rest days when calories run lower. Add jalapeños or hot sauce for heat at zero calorie cost. Tomato-salsa base freezes exceptionally well.",
     levers: [
@@ -213,13 +214,14 @@ const RECIPES = [
       { label: "2 tbsp full-fat sour cream",      qty: 2,   unit: "tbsp",     grams: 30, item: "sour cream",           note: "portion per container",                       cal: 60,  protein: 1, carbs: 2,  fat: 5,  fiber: 0 },
       { label: "1 oz Mexican cheese blend",        qty: 1,   unit: "oz",       grams: 28, item: "Mexican cheese blend", note: "portion per container",                       cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
       { label: "Flour tortilla wrap (swap rice)",  qty: 1,   unit: "tortilla", grams: 45, item: "flour tortilla",       note: "store separately, wrap at each meal",         cal: 200, protein: 6, carbs: 36, fat: 3,  fiber: 1 },
+      { label: "2 tbsp quick-pickled red onion",   qty: 2,   unit: "tbsp",     grams: 20, item: "quick-pickled red onion", note: "make once (sliced onion + vinegar + pinch sugar/salt, 30 min, keeps weeks in the fridge) — spoon on at packing", cal: 5, protein: 0, carbs: 1, fat: 0, fiber: 0 },
     ],
   },
   {
     id: "arrabiata", name: "Arrabbiata", tag: "Spicy Italian", emoji: "🍅", color: "#DC2626", veggie: "brussels",
     sauce: { cal: 55, protein: 2, carbs: 9, fat: 2, fiber: 2 },
-    ingredients: ["4.5 lbs boneless skinless chicken thighs","2 cans (28 oz / 794g each) crushed tomatoes","8 garlic cloves, minced","2–3 tsp red pepper flakes — adjust to heat preference","1 tbsp olive oil (14g)","1 tsp sugar (balances acidity)","1 tsp Italian seasoning","1 tsp kosher salt","Fresh basil if available — add after cooking"],
-    method: ["Add crushed tomatoes, garlic, olive oil, sugar, seasonings, and salt to slow cooker.","Nestle chicken thighs into the sauce.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Shred or slice chicken, stir back into sauce.","Optional: blend smooth with immersion blender.","Portion over rice and veggies. Cool then freeze."],
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","2 cans (28 oz / 794g each) crushed tomatoes","8 garlic cloves, minced","2–3 tsp red pepper flakes — adjust to heat preference","1 tbsp olive oil (14g)","1 tbsp tomato paste (16g; deepens the sauce)","1 tsp sugar (balances acidity)","1 tsp Italian seasoning","1 tsp kosher salt","1 bay leaf (remove before freezing)","Fresh basil if available — add after cooking"],
+    method: ["Add crushed tomatoes, garlic, olive oil, tomato paste, sugar, seasonings, salt, and bay leaf to slow cooker.","Nestle chicken thighs into the sauce.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Remove and discard bay leaf.","Shred or slice chicken, stir back into sauce.","Optional: blend smooth with immersion blender.","Portion over rice and veggies. Cool then freeze."],
     tip: "Tomato-based sauces are the most freezer-stable — this reheats the best of all six. Red pepper flakes lose heat in the slow cooker, so add more at serving if needed.",
     levers: [
       { label: "1 tbsp olive oil drizzle at serving", qty: 1,    unit: "tbsp", grams: 14, item: "olive oil",          note: "portion per container",          cal: 120, protein: 0, carbs: 0,  fat: 14, fiber: 0 },
@@ -231,8 +233,8 @@ const RECIPES = [
   {
     id: "rrp", name: "Roasted Red Pepper", tag: "Smoky Italian", emoji: "🫑", color: "#EA580C", veggie: "mixed",
     sauce: { cal: 70, protein: 2, carbs: 12, fat: 2, fiber: 2 },
-    ingredients: ["4.5 lbs boneless skinless chicken thighs","2 jars (12 oz / 340g each) roasted red peppers, drained","1 can (28 oz / 794g) crushed tomatoes","6 garlic cloves, minced","1 small onion, diced","1 tsp smoked paprika","1 tsp Italian seasoning","1 tsp kosher salt","1 tbsp olive oil (14g)"],
-    method: ["Add all sauce ingredients and chicken to slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Remove chicken. Blend sauce smooth with immersion blender directly in cooker.","Shred or slice chicken and return to sauce. Stir to coat.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
+    ingredients: ["4.5 lbs boneless skinless chicken thighs","2 jars (12 oz / 340g each) roasted red peppers, drained","1 can (28 oz / 794g) crushed tomatoes","6 garlic cloves, minced","1 small onion, diced","1 tsp smoked paprika","1 tsp Italian seasoning","1 tsp kosher salt","1 bay leaf (remove before blending)","1 tbsp olive oil (14g)"],
+    method: ["Add all sauce ingredients, bay leaf, and chicken to slow cooker.","Cook LOW 6–7 hrs or HIGH 3–4 hrs.","Remove chicken and discard bay leaf. Blend sauce smooth with immersion blender directly in cooker.","Shred or slice chicken and return to sauce. Stir to coat.","Portion over rice and veggies while warm.","Cool to room temp completely before sealing and freezing."],
     tip: "The immersion blender is non-negotiable — blending the roasted peppers into the tomato base is what makes this sauce. Add heavy cream at serving only, not during freezing, to prevent separation.",
     levers: [
       { label: "2 tbsp heavy cream at serving",       qty: 2, unit: "tbsp", grams: 30, item: "heavy cream",          note: "portion per container", cal: 100, protein: 0, carbs: 1,  fat: 10, fiber: 0 },
@@ -387,6 +389,7 @@ const RECIPES = [
       { label: "1 oz shredded cheddar on top",           qty: 1,   unit: "oz",      grams: 28, item: "shredded cheddar", note: "portion per container",                     cal: 110, protein: 7, carbs: 0,  fat: 9,  fiber: 0 },
       { label: "1/2 avocado at serving",                  qty: 0.5, unit: "avocado", grams: 75, item: "avocado",        note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6,  fat: 11, fiber: 5 },
       { label: "1 tbsp bacon bits on top",                qty: 1,   unit: "tbsp",    grams: 7,  item: "real bacon bits", note: "portion per container",                     cal: 40,  protein: 3, carbs: 0,  fat: 3,  fiber: 0 },
+      { label: "2 tbsp quick-pickled red onion",          qty: 2,   unit: "tbsp",    grams: 20, item: "quick-pickled red onion", note: "make once (sliced onion + vinegar + pinch sugar/salt, 30 min, keeps weeks in the fridge) — spoon on at packing", cal: 5, protein: 0, carbs: 1, fat: 0, fiber: 0 },
     ],
   },
   {
@@ -400,6 +403,7 @@ const RECIPES = [
       { label: "1 oz blue cheese crumbles",   qty: 1,   unit: "oz",      grams: 28, item: "blue cheese crumbles", note: "portion per container",                      cal: 100, protein: 6, carbs: 1, fat: 8,  fiber: 0 },
       { label: "1/2 avocado at serving",      qty: 0.5, unit: "avocado", grams: 75, item: "avocado",             note: "slice fresh at each meal, don't pre-portion", cal: 120, protein: 1, carbs: 6, fat: 11, fiber: 5 },
       { label: "1 tbsp full-fat ranch",       qty: 1,   unit: "tbsp",    grams: 15, item: "full-fat ranch",      note: "portion per container",                       cal: 70,  protein: 0, carbs: 1, fat: 7,  fiber: 0 },
+      { label: "2 tbsp quick-pickled red onion", qty: 2, unit: "tbsp",   grams: 20, item: "quick-pickled red onion", note: "make once (sliced onion + vinegar + pinch sugar/salt, 30 min, keeps weeks in the fridge) — spoon on at packing", cal: 5, protein: 0, carbs: 1, fat: 0, fiber: 0 },
     ],
   },
 ];
